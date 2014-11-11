@@ -1,0 +1,38 @@
+#include<stdio.h>
+#include<math.h>
+#define FEET 12
+#define INCH 2.54
+
+double nba(int f, int i)
+{
+    return ((f*FEET*INCH)+(i*INCH));
+}
+
+double round(double nba)
+{
+    return floor(nba+0.5);
+}
+
+double meters(double round)
+{
+    return round/100;
+}
+
+void test_nba(void)
+{
+    int f ;
+    int i ;
+    while (scanf("%d%d", &f, &i) !=EOF)
+	{
+		//double c= nba(f,i) ;
+		//double a= round(nba(f,i));
+		double b = meters(round(nba(f,i)));
+		printf("%f\n", b);
+	}
+}
+
+int main(void)
+{
+    test_nba();
+    return 0;
+}
