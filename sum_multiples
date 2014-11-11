@@ -1,0 +1,29 @@
+#include <stdio.h>
+#include <math.h>
+
+int sum_naturals(int n)
+{
+	return (n-1)*n/2;
+}
+
+int sum_multiples(int r, int n)
+{
+    return ((sum_naturals(n))*r);
+}
+
+void test_sum_multiples(void)
+{
+    int r;
+    int n;
+    while (scanf("%d%d", &r, &n) !=EOF)
+    {
+       int x = sum_multiples(r,n);
+       printf("%d\n",x);
+    }
+}
+
+int main(void)
+{
+    test_sum_multiples();
+    return 0;
+}
