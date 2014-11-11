@@ -1,0 +1,24 @@
+#include <stdio.h>
+
+int sum_progression(int x0, int r, int n)
+{
+    return (n*(x0+(x0+(n-1)*r))/2);
+}
+
+void test_sum_progression(void)
+{
+    int x0;
+    int r;
+    int n;
+    while (scanf("%d%d%d", &x0, &r, &n) !=EOF)
+	{
+		int x = sum_progression(x0,r,n);
+		printf("%d\n", x);
+	}
+}
+
+int main(void)
+{
+    test_sum_progression();
+    return 0;
+}
