@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <math.h>
+
+int doubles_take(const double *a, int n, int x, double *b)
+{
+	int pos = 0;
+	int i;
+	if (x>n) 
+		{
+		x=n;
+		}
+	for (i = 0; i <= x-1; i++)
+	{
+		b[pos] = a[i];
+		pos++;
+	}
+	return pos;
+}
+
+int doubles_drop (const double *a, int n, int x, double *b)
+{
+	int pos = 0;
+	int i;
+	if (x >n)
+		{
+		x=n;
+		}
+	for (i = x; i <= n-1; i++)
+	{
+		b[pos] = a[i];
+		pos++;
+	}
+	return pos;
+}
+
+void test_doubles(void)
+{
+	double *a;
+	int n;
+	double x;
+    double *b;
+    while (scanf("%lf%d%lf", &a, &n, &x) !=EOF)
+	{
+		printf("%g\n", doubles_take(a,n,x,b));
+		printf("%g\n", double_drop(a,n,x,b));
+	}
+}
+
+
+int main (void)
+{
+	test_doubles();
+	return 0;
+}
