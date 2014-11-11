@@ -1,0 +1,21 @@
+{
+	return (comprimento*largura)-blue(comprimento, largura);
+}
+
+void test_number(void)
+{
+    int comprimento ;
+    int largura ;
+    while (scanf("%d%d", &comprimento, &largura) !=EOF)
+	{
+		int b = blue(comprimento, largura);
+		int y = yellow(comprimento, largura);
+		printf("%d %d\n", b, y);
+	}
+}
+
+int main(void)
+{
+    test_number();
+    return 0;
+}
