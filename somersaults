@@ -1,0 +1,31 @@
+#include <stdio.h>
+
+int somersaults(int g)
+{
+    int s=0;
+    if(g%4==0)
+        s=g/4*8;
+    if(g%4==1)
+        s=g/4*8+1;
+    if(g%4==2)
+        s=g/4*8+3;
+    if(g%4==3)
+        s=g/4*8+6;
+    return s;
+}
+
+void test_somersaults(void)
+{
+    int g;
+    while (scanf("%d", &g) !=EOF)
+	{
+		int c = somersaults(g);
+		printf("%d\n", c);
+	}
+}
+
+int main(void)
+{
+    test_somersaults();
+    return 0;
+}
