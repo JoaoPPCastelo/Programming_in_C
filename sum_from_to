@@ -17,7 +17,6 @@ void test_sum_from_to(void)
 
 int main(void)
 {
-	//test_sum_naturals();
 	test_sum_from_to();
 	return 0;
 }
