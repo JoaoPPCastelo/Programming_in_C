@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <math.h>
+
+int seconds_from_time (int h, int m, int s)
+{
+	return (h*60*60+m*60+s);
+}
+
+int seconds_from_int (int valor)
+{
+	//int valor;
+	int h = (valor/10000);
+	int m = (valor/100)%100;
+	int s = (valor%100);
+	return seconds_from_time(h,m,s);
+}
+
+void test_seconds_from_time(void)
+{
+	int h;
+    int m;
+	int s;
+	//int valor;
+    while (scanf("%d%d%d", &h, &m, &s) !=EOF)
+	{
+		//int a = seconds_from_time();
+		printf("%d\n", seconds_from_time(h,m,s));
+		printf("%d\n", seconds_from_int(seconds_from_time(h,m,s)));
+	}
+}
+
+int main (void)
+{
+	test_seconds_from_time();
+	return 0;
+}
