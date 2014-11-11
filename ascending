@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <math.h>
+
+int doubles_ascending(const double *a, int n, double *b);
+
+int doubles_get(double *a)
+{
+	int result = 0;
+	double x;
+	while (scanf("%lf", &x) != EOF)
+		a[result++] = x;
+	return result;
+}
+
+void test_doubles(void)
+{
+	double a[999999];
+	int n=0;
+	double x;
+    double b[999999];
+    while (scanf("%lf\n",&x) !=EOF)
+	    a[n++]=x;
+		int z=doubles_ascending(a,n,b);
+	printf("%d\n", z);
+	//printf("%g\n", double_drop(a,n,x,b));
+	
+}
+
+
+int main (void)
+{
+	test_doubles();
+	return 0;
+}
