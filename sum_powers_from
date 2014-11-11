@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <math.h>
+
+double sum_powers_from(double x, int n, double y)
+{
+	return n == 0 ? 0 : pow(x,y) + sum_powers_from(x+1.0, n-1,y);
+}
+
+void test_sum_powers_from(void)
+{
+	double x;
+	int n;
+	double y;
+	while(scanf("%lf%d%lf", &x, &n, &y) !=EOF)
+	{
+		double z = sum_powers_from(x,n,y);
+		printf("%f\n", z);
+	}
+}
+
+void test_two_sequences(void)
+{
+	int n;
+	while(scanf("%d", &n) !=EOF)
+	{
+		double w1 = sum_powers_from(1.0, n, -1.0);
+		printf("%f\n", w1);
+		double w2 = sum_powers_from(1.0, n, -2.0);
+		printf("%f\n", w2);
+	}
+}
+
+int main(void)
+{
+	test_two_sequences();
+	return 0;
+}
+
