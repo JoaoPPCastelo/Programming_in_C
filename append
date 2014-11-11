@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <math.h>
+
+int doubles_append(const double *a, int n, const double *b, int m, double *c)
+{
+	int pos = 0;
+	int i;
+	for (i = 0; i <= n-1; i++)
+	{
+		c[pos] = a[i];
+		pos++;
+	}
+	
+	for (i = 0; i <= m-1; i++)
+	{
+		c[pos] = b[i];
+		pos++;
+	}
+	return pos;
+}
+
+void test_doubles(void)
+{
+	double *a;
+	int n;
+	double x;
+    double *b;
+    while (scanf("%lf%d%lf", &a, &n, &x) !=EOF)
+	{
+		printf("%g\n", doubles_append(a,n,b,c));
+	}
+}
+
+
+int main (void)
+{
+	test_doubles();
+	return 0;
+}
