@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <math.h>
+
+int doubles_large(const double *a, int n, double x, double *b)
+{   int pos = 0;
+	for (int i = 0; i <= n-1; i++)
+	{
+	//int pos=0;
+		if (a[i]>x)
+			{
+			b[pos] = a[i];
+			pos ++;
+			}
+	
+	}	
+	return pos;
+}
+
+int doubles_small(const double *a, int n, double x, double *b)
+{
+	int pos = 0;
+	for (int i = 0; i <= n-1; i++)
+	{
+	//int pos=0;
+		if (a[i]<x)
+			{
+			b[pos] = a[i];
+			pos ++;
+			}
+	}
+		return pos;	
+}
+
+int doubles_equal(const double *a, int n, double x, double *b)
+{
+	int pos = 0;
+	for (int i = 0; i <= n-1; i++)
+	{
+		if (a[i]==x)
+			{
+			b[pos] = a[i];
+			pos ++;
+			}
+	}	
+	return pos;
+}
+
+void test_doubles(void)
+{
+	double *a;
+	int n;
+	double x;
+    double *b;
+    while (scanf("%lf%d%lf", &a, &n, &x) !=EOF)
+	{
+		printf("%g\n", doubles_large(a,n,x,b));
+		printf("%g\n", double_small(a,n,x,b));
+		printf("%g\n", doubles_equal(a,n,x,b));
+	}
+}
+
+
+int main (void)
+{
+	test_doubles();
+	return 0;
+}
