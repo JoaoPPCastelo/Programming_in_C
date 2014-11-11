@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <math.h>
+
+double zero1 (double a, double b, double c)
+{
+	return (-b-sqrt(pow(b,2)-4*a*c))/(2*a);
+}
+
+double zero2 (double a, double b, double c)
+{
+	return (-b/a)-zero1(a,b,c);
+}
+
+void test_zero(void)
+{
+	double a;
+    double b;
+	double c;
+	//double value;
+    while (scanf("%lf%lf%lf", &a, &b, &c) !=EOF)
+	{
+		printf("%f\n", zero1(a,b,c));
+		printf("%f\n", zero2(a,b,c));
+	}
+}
+
+int main (void)
+{
+	test_zero();
+	return 0;
+}
