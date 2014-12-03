@@ -1,0 +1,411 @@
+#include <stdio.h>
+#include <math.h>
+#include <assert.h>
+#include <limits.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define MAX_WORDS 25
+#define MAX_LINE_LENGTH 1000
+#define MAX_CITIES 1000
+
+int strings_count_while( char **a, int n, char *x) 
+{ 
+    int result = 0; 
+    while (result < n && strcmp(a[result],x) == 0)
+        result++; 
+    return result; 
+} 
+
+int strings_unique(char **a, int n, char **b) 
+{ 
+    int result = 0; 
+    int i = 0; 
+    while (i < n) 
+    { 
+        int z = strings_count_while(a+i, n-i, a[i]); 
+        b[result++] = a[i]; 
+        i += z; 
+    } 
+    return result; 
+}
+
+int str_len(const char *s)
+{
+    int result = 0;
+    while (s[result] != '\0')
+        result++;
+    return result;
+} 
+
+void str_cpy(char *s, const char *t)
+{
+    int i = 0;
+    while (t[i] != 0)
+    {
+        s[i] = t[i];
+        i++;
+    }
+    s[i] = '\0';
+}
+
+//ler linha inteira
+
+int str_readline(FILE *f, char *s)
+{
+    int result = EOF;
+    char *p = fgets(s, INT_MAX, f);
+    if (p != NULL)
+    {
+        result = (int) strlen(s);
+        if (result > 0 && s[result-1] == '\n')
+            s[--result] = '\0';
+    }
+    return result;
+}
+
+int str_getline(char *s)
+{
+    return str_readline(stdin, s);
+} 
+
+//duplicar cadeia
+
+char *str_dup(const char *s)
+{
+    char *result = (char *) malloc(strlen(s) + 1);
+    strcpy(result, s);
+    return result;
+} 
+
+//ler linha a linha
+
+int strings_read(FILE *f, char **a)
+{
+    int result = 0;
+    char line[MAX_LINE_LENGTH];
+    while (str_readline(f, line) != EOF)
+        a[result++] = str_dup(line);
+    return result;
+} 
+
+int strings_get(char **a)
+{
+    return strings_read(stdin, a);
+} 
+
+//ler palavra a palavra
+
+int strings_readwords(FILE *f, char **a)
+{
+    int result = 0;
+    char word[MAX_LINE_LENGTH];
+    while (fscanf(f, "%s", word) != EOF)
+        a[result++] = str_dup(word);
+    return result;
+} 
+
+int strings_getwords(char **a)
+{
+    return strings_readwords(stdin, a);
+} 
+
+//escrever cadeias
+
+void strings_fprintf(FILE *f, char **s, int n, const char *fmt)
+{
+    for (int i = 0; i < n; i++)
+        fprintf(f, fmt, s[i]);
+} 
+
+void strings_printf(char **s, int n, const char *fmt)
+{
+    strings_fprintf(stdout, s, n, fmt);
+} 
+
+//escrever cadeias com separador
+
+void strings_write(FILE *f, char **s, int n, const char *separator)
+{
+    if(n > 0)
+    {
+        fprintf(f, "%s", s[0]);
+        for (int i = 1; i < n; i++) 
+            fprintf(f, "%s%s", separator, s[i]);
+    }
+} 
+
+void strings_print(char **s, int n, const char *separator)
+{
+    strings_write(stdout, s, n, separator);
+} 
+
+//escrever e mudar de linha
+
+void strings_writeln(FILE *f, char **s, int n, const char *separator)
+{
+    strings_write(f, s, n, separator);
+    fprintf(f, "\n");
+}
+
+void strings_println(char **s, int n, const char *separator)
+{
+    strings_writeln(stdout, s, n, separator);
+}
+
+void strings_fprintfln(FILE *f, char **s, int n, const char *fmt)
+{
+    strings_fprintf(f, s, n, fmt);
+    fprintf(f, "\n");
+}
+
+void strings_printfln(char **s, int n, const char *fmt)
+{
+    strings_fprintfln(stdout, s, n, fmt);
+} 
+
+void test_strings_get(void)
+{
+    char *s[MAX_WORDS];
+    int n = strings_get(s);
+    strings_printf(s, n, "{%s}\n");
+} 
+
+int strings_find(char **s, int n, const char *x)
+{
+    for (int i = 0; i < n; i++)
+        if (strcmp(s[i], x) == 0)
+            return i;
+    return -1;
+} 
+
+void test_portuguese_cities(void)
+{
+    FILE *f = fopen("cidades_2011.txt", "r");
+    char *cities[MAX_CITIES];
+    int n = strings_read(f, cities);
+    char line [MAX_LINE_LENGTH];
+    while (str_getline(line) != EOF)
+    {
+        int k = strings_find(cities, n, line);
+        printf("%d\n", k);
+    }
+}
+
+int strings_rank(char **s, int n, const char *x)
+{
+    int result = 0;
+    while (n > 0)
+    {
+        int m = n / 2;
+        if (strcmp(x, s[m]) <= 0)
+            n = m;
+        else
+        {
+            result += m + 1;
+            s += m + 1;
+            n -= m + 1;
+        }
+    }
+    return result;
+}
+
+int strings_bfind(char **s, int n, const char *x)
+{
+    int r = strings_rank(s, n, x);
+    return r < n && strcmp(s[r], x) == 0 ? r : -1;
+} 
+
+void test_english_words(void)
+{
+    FILE *f = fopen("wordlist.10000.txt", "r");
+    char *words[MAX_WORDS];
+    int n = strings_read(f, words);
+    char line [MAX_LINE_LENGTH];
+    while (str_getline(line) != EOF)
+    {
+        int k = strings_bfind(words, n, line);
+        printf("%d\n", k);
+    }
+}
+
+//Ordenação de arrays do tipo int
+
+void ints_exchange(int *a, int x, int y)
+{
+    int m = a[x];
+    a[x] = a[y];
+    a[y] = m;
+}
+
+void ints_sort_last(int *a, int n)
+{
+    while (n > 1 && a[n-2] > a[n-1])
+    {
+        ints_exchange(a, n-2, n-1);
+        n--;
+    }
+}
+
+int ints_insert(int *a, int n, int x)
+{
+    int result = n;
+    a[result++] = x;
+    ints_sort_last(a, result);
+    return result;
+}
+
+void ints_isort(int *a, int n)
+{
+    for (int i = 2; i <= n; i++)
+        ints_sort_last(a, i);
+}
+
+//----------------------Start of A------------------------------------------------
+
+void strings_exchange(char **a, int x, int y)
+{
+    char *m = a[x];
+    a[x] = a[y];
+    a[y] = m;
+} 
+
+void strings_sort_last(char **a, int n)
+{
+    int i = n-1;
+    while (i > 0 && strcmp(a[i-1], a[i]) > 0)
+    {
+        strings_exchange(a, i-1, i);
+        i--;
+    }
+}
+
+void strings_isort(char **a, int n)
+{
+    for (int i = 2; i <= n; i++)
+        strings_sort_last(a, i);
+}
+
+void test_strings_isort_demo(void)
+{
+    char *a[1000];
+    int n;
+    while ((n = strings_getwords(a)) != 0)
+    {
+        strings_isort(a, n);
+        strings_println(a, n, "\n");
+        freopen("CON", "r", stdin); // Windows
+        printf("------\n");
+    }
+} 
+
+void test_strings_unique_isort(void)
+{
+    char *a[1000];
+    int n;
+    char *b[1000];
+    n = strings_getwords(a);
+    strings_isort(a, n);
+    int m = strings_unique(a, n, b);
+    strings_println(b, m, "\n");
+}
+
+//-----------------------------End of A - Start of B----------------------------------------------
+
+int strings_copy(char **a, int n, char **b) 
+{ 
+    if (n < 0) 
+        n = 0; 
+    memmove(b, a, n * sizeof(char *));
+    return n; 
+}
+
+int strings_merge(char **a, int n, char **b, int m, char **c)
+{
+    int result = 0;
+    int i = 0;
+    int j = 0;
+    while (i < n && j < m)
+        if (strcmp(a[i], b[j]) <=0 )
+            c[result++] = a[i++];
+        else
+            c[result++] = b[j++];
+    result += strings_copy(a + i, n - i, c+result);
+    result += strings_copy(b + j, m - j, c+result);
+    return result;
+}
+
+void strings_msort(char **a, int n)
+{
+    if (n > 1)
+    {
+        int m = n / 2;
+        strings_msort(a, m);
+        strings_msort(a+m, n-m);
+        char **b = (char **) malloc(100000 * sizeof(char *));
+        strings_merge(a, m, a+m, n-m, b);
+        strings_copy(b, n, a);
+        free(b);
+    }
+}
+
+void test_strings_msort(void)
+{
+    char *a[1000];
+    int n;
+    n = strings_getwords(a);
+    strings_msort(a, n);
+    strings_println(a, n, "\n");
+ }
+
+//--------------------END of B - Start of C---------------------------------------------------------------
+
+void strings_change(char **a, int n)
+{
+    char nums[100];
+    //char a[50];
+    for (int i = 0; i < n; i++)
+    {
+        strcpy(nums, a[i] + strlen(a[i]) - 5);
+        a[i] [strlen(a[i]) - 5] = '\0';
+        strcat(nums, a[i]);
+        strcpy(a[i], nums);
+    }
+}
+
+void strings_change_back(char **a, int n)
+{
+    char name[100];
+    for (int i = 0; i < n; i++)
+    {
+        strcpy(name, (a[i]+5));
+        a[i] [5] = '\0';
+        strcat(name, a[i]);
+        strcpy(a[i], name);
+    }
+}
+
+void test_strings_change(void)
+{
+    char *a[1000];
+    //char *b[1000];
+    int n = strings_getwords(a);
+    strings_change(a, n);
+    strings_isort(a, n);
+    strings_change_back(a, n);
+    strings_println(a, n, "\n");
+}
+
+//-----------------End of C-----------------------------------
+
+int main(void)
+{
+    //test_strings_get();
+    //test_portuguese_cities();
+    //test_english_words();
+    //test_strings_isort_demo();
+    //test_strings_unique_isort();        //Problem A
+    //test_strings_msort();               //Problem B
+    test_strings_change();                //Problem C
+    return 0;
+}
