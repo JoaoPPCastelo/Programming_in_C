@@ -1,0 +1,2207 @@
+Enter file contents here// --------------------
+
+// Festa da Programacao
+// 12 de Dezembro
+// Autor: Joao Castelo
+// ID Mooshak: Joao_Castelo_52781
+
+// --------------------
+
+
+
+#include <stdio.h>
+#include <math.h>					//Operações matemáticas
+#include <assert.h>					//Testes unitarios
+#include <limits.h>					//Infinity
+#include <string.h>					//caracteres
+#include <stdlib.h>
+#include <time.h>					//Função clock
+
+/*----------------Defines----------------*/
+
+#define CLOCKS_PER_SECOND 1000
+#define MAX_SIZE 510000				//Mais e o programa estoira XD XD (+/-)
+//#define INT_MAX 1000
+#define MAX_LINES 10000
+#define MAX_LINE_LENGTH 10000
+#define MAX_WORDS 10000
+#define PRICE_PER_MINUTE 0.234
+#define UNIT_1 0.60
+#define UNITS_OTHER 0.60
+#define MAX_DAY_1 9.00
+#define PRICE_PER_HOUR 1.50
+#define MAX_DAY_OTHERS 9.00
+#define MAX_FLIGHTS 10000
+#define M_PI 3.14159265358979323846
+#define M_PI_2 1.57079632679489661923
+#define M_PI_4 0.78539816339744830962
+
+/*----------------End-of-Defines----------------*/
+
+/*----------------Funtions----------------*/
+
+//Hello World
+
+void hello_world(void)
+{
+	printf("Hello Wolrd!\n");
+}
+
+//iniciais e idade
+
+void initials_age (void)
+{
+	char p,u;
+	int age;
+	printf("Enter your initials, followed by your age: ");
+	scanf("%c %c %d", &p, &u, &age);
+	printf("My initials are: %c%c and my age is %d.\n", p, u, age);
+}
+
+//sizes
+
+void sizes (void)
+{
+	int i;
+	double d;
+	char c;
+	printf("The size of an int is: %lu.\n", (unsigned long)sizeof(i));
+	printf("The size of an double is: %lu.\n", (unsigned long)sizeof(d));
+	printf("The size of an c is: %lu.\n", (unsigned long)sizeof(c));
+}
+
+//expressions
+
+void expressions(void)
+{
+	int a = 100;
+	int b = 2;
+	int c = 25;
+	int d = 4;
+	int result;
+	result = a - b;
+	printf("a - b = %i\n", result);
+	result = a * b;
+	printf("a * b = %i\n", result);
+	result = a / c;
+	printf("a / c = %i\n", result);
+	result = a + b * c;
+	printf("a + b * c = %i\n", result);
+	printf("a * b + c * d = %i\n", a * b + c * d);
+}
+
+//computing factorial
+
+void computing_factorial(void)
+{
+	int answer = 1;
+	int i;
+	for (i = 2; i <= 10; i++)
+	{
+		answer = answer *i;
+	}
+	printf("Answer = %d\n", answer);
+}
+
+//average_fix
+
+void average_fix(void)
+{
+	int numberofnums=0, total=0, value, valsRead;
+	float average;
+	valsRead = scanf("%d", &value);
+	while (valsRead > 0)
+	{
+		if (value < 0)
+		{
+			valsRead = scanf("%d", &value);
+			continue;
+		}
+		numberofnums++;
+		total += value; //equivalent to total + value;
+		printf("Read %d\n", value);
+		valsRead = scanf("%d", &value);
+	}
+	average = (float)total / (float)numberofnums;
+	printf("You read %d values. Average = %f.\n",numberofnums, average);
+}
+
+//sum_naturals
+
+int sum_naturals(int n)
+{
+	return (n-1)* n/2;
+}
+
+//sum_from_to
+
+int sum_from_to(int x, int y)
+{
+	return ((y-1)*y/2)-((x-1)*x/2);
+}
+
+//sum_multiples
+
+int sum_multiples(int r, int n)
+{
+	return sum_naturals(n)*r;
+}
+
+//	weighted_average/ nota programação imperativa
+
+double weighted_average(double lab, double exam)
+{
+	return (lab * 0.3 + exam * 0.7);
+}
+
+double round(double x) //arredondamento
+{
+	return floor(x+0.5);
+}
+
+double grade(double lab, double exam)
+{
+	return exam >= 8.5 ? weighted_average(lab, exam) : exam;
+}
+
+int final_grade(double lab, double exam) //nota final
+{
+	return (int) round(grade(lab,exam));
+}
+
+double exam_exact(double lab, int goal)
+{
+	return(goal - 0.3 * lab)/0.7;
+}
+
+double ceiling_one_decimal(double x) //arredondar às unidades por excesso
+{
+	return ceil(x*10.0)/10.0;
+}
+
+double exam_one_decimal(double lab, int goal)
+{
+	return ceiling_one_decimal(exam_exact(lab, goal));
+}
+
+double max(double x, double y)
+{
+	return x>=y ? x : y;
+}
+
+double min(double x, double y)
+{
+	return x<=y ? x : y;
+}
+
+double exam(double lab, int goal)
+{
+	return max(exam_one_decimal(lab, goal), 8.5);
+}
+
+//roaming
+
+double roaming_exact(double x) //expressao condicional
+{
+	return x <= 30 ? PRICE_PER_MINUTE/2 : x * PRICE_PER_MINUTE / 60;
+}
+
+double roaming_exact_ifelse(double x)
+{
+	double result;
+	if (x <= 30)
+		result = PRICE_PER_MINUTE / 2;
+	else
+		result = x * PRICE_PER_MINUTE / 60;
+	return result;
+}
+
+//double round;
+
+double round_three_decimals(double x)
+{
+	return round(x * 1000)/1000;
+}
+
+double roaming(double x)
+{
+	return round_three_decimals(roaming_exact(x));
+}
+
+//estacionamento em faro
+
+double parking(double x)
+{
+	double result;
+	double days_complete = floor(x / 1440);
+	if (x <= 15)
+		result = UNIT_1;
+	else if (x <= 1440)
+		result = min(MAX_DAY_1, UNIT_1 + ceil((x-15)/15)*UNITS_OTHER);
+	else
+		result = MAX_DAY_1 + MAX_DAY_OTHERS * (days_complete - 1) + min(MAX_DAY_OTHERS, ceil((x - days_complete * 1440)/60)*PRICE_PER_HOUR);
+	return result;
+}
+
+//sum_geometric
+
+double sum_geometric(double x, int n)
+{
+	return n==0 ? 0.0 : 1.0 + x * sum_geometric(x, n-1);
+}
+
+double sum_geometric_i(double x, int n)
+{
+	double result = 0.0;
+	for (int i = 0; i < n; i++)
+		result = 1.0 + x * result;
+	return result;
+}
+
+double sum_squares(int a)
+{
+	return (a-1.0) * a * (2.0*a - 1.0)/6;
+}
+
+double sum_squares_e(int a)
+{
+
+	double result = 0.0;
+	double term = 0.0;
+	for (int i = 0; i<a; i++)
+	{
+		result += term;
+		term += 2 * i +1;
+	}
+	return result;
+}
+
+double sum_squares_f(int a)
+{
+	double result = 0.0;
+	double term = 0.0;
+	double delta = 1.0;
+	for (int i = 0; i < a; i++)
+	{
+		result += term;
+		term += delta;
+		delta += 2.0;
+	}
+	return result;
+}
+
+//sum_progression
+
+int sum_progression (int x0, int r, int n)
+{
+	return (n*(x0+(x0+(n-1)*r))/2);
+}
+
+//sum_arithmetic
+
+double sum_arithmetic(double x0, double r, int n)
+{
+	return n == 0 ? 0 : x0 + sum_arithmetic(x0 + r, r, n-1);
+}
+
+//sum_squares_from
+
+double sum_squares_from(double x, double n)
+{
+	return n == 0 ? 0 : x*x + sum_squares_from(x+1, n-1);
+}
+
+double sum_squares_tp(double n)
+{
+	return sum_squares_from(0.0,n);
+}
+
+//sum_powers_from
+
+double sum_powers_from(double x, double n, double y)
+{
+	return n == 0 ? 0 : pow(x,y) + sum_powers_from(x+1.0, n-1,y);
+}
+
+//sum_progression - aula teorica
+
+double sum_progression_t(double x, double r, double n)
+{
+	double result = 0.0;
+	for (int i = 0; i < n; i++)
+	{
+		result += x;
+		x += r;
+	}
+	return result;
+}
+
+double factorial(int n)
+{
+	double result = 1.0;
+	for (int i = 1; i <= n; i++)
+		result *= i;
+	return result;
+}
+
+//count_terms
+
+int count_terms(double x)
+{
+	int result = 0;
+	double sum = 0.0;
+	while (sum <=2-x)
+	{
+		sum = 1 + sum/2;
+		result++;
+	}
+	return result;
+}
+
+//problema 3x+1 para x impar e x/2 para x par
+
+int f(int x)
+{
+	return x % 2 == 1 ? 3 * x +1 : x / 2;
+}
+
+void show_cycle(int x)
+{
+	while (x != 1)
+	{
+		printf("%d ", x);
+		x = f(x);
+	}
+	printf("%d\n", x);
+}
+
+int cyle_length(int x)
+{
+	int result = 0;
+	while (x != 1)
+	{
+		result++;
+		x = f(x);
+	}
+	result++;
+	return result;
+}
+
+//count_digits_positive
+
+int count_digits_positive(int x)
+{
+	int result = 0;
+	while (x > 0)
+	{
+		result++;
+		x /= 10;
+	}
+	return result;
+}
+
+int count_digits(int x)
+{
+	int result = 1;
+
+	if (x > 0)
+		result = count_digits_positive(x);
+	return result;
+}
+
+int digits_positive(int x, int *a)
+{
+	int result = 0;
+	while (x > 0)
+	{
+		a[result++] = x % 10;
+		x /= 10;
+	}
+	return result;
+}
+
+int digits(int x, int *a)
+{
+	int result = 1;
+	a[0] = 0;
+	if (x > 0)
+		result = digits_positive(x, a);
+	return result;
+}
+
+int mirror(const int *a, int n, int *b) //inverter o array
+{
+	for (int i = 0; i < n; i++)
+		b[n-1-i] = a[i];
+	return n;
+}
+
+void ints_println_basic(const int *a, int n) //escreve os valores de todos os elementos do array
+{
+	if (n > 0)
+	{
+		printf("%d", a[0]);
+		for (int i = 1; i < n;i++)
+			printf(" %d", a[i]);
+	}
+	printf("\n");
+}
+
+//ler arrays do tipo int
+
+int ints_get(int *a)
+{
+	int result = 0;
+	int x;
+	while (scanf("%d", &x) !=EOF)
+		a[result++] = x;
+	return result;
+}
+
+//ler arrays do tipo double
+
+int doubles_get(double *a)
+{
+	int result = 0;
+	double x;
+	while(scanf("%lf", &x) !=EOF)
+		a[result++] = x;
+	return result;
+}
+
+void doubles_println_basic(const double *a, int n)
+{
+	if (n > 0)
+	{
+		printf("%g", a[0]);
+		for (int i = 1; i < n; i++)
+			printf(" %g", a[i]);
+	}
+	printf("\n");
+}
+
+//Contagem de elementos do array
+
+int doubles_count(const double *a, int n, int x)
+{
+	int result = 0;
+	for (int i = 0; i < n; i++)
+		if (a[i] == x)
+			result ++;
+	return result;
+}
+
+//Problema prático - dias de chuva7
+
+void task_rainy_days(void)
+{
+	double p[50000];
+	int n = doubles_get(p);
+	printf("%d\n", n - doubles_count(p, n, 0.0));
+}
+
+//Soma do array
+
+int ints_sum(const int *a, int n)
+{
+	int result = 0;
+	for (int i = 0; i < n; i++)
+		result += a[i];
+	return result;
+}
+
+double doubles_sum(const double *a, int n)
+{
+	double result = 0;
+	for (int i = 0; i < n; i++)
+		result += a[i];
+	return result;
+}
+
+double doubles_sum_r(double *a, int n) //tecnica dos subarrays
+{
+	return n == 0 ? 0 : a[0] + doubles_sum_r(a+1, n-1);
+}
+
+int ints_sums_by_15(const int *a, int n, int *b)
+{
+	int result = 0;
+	for (int i = 0; i < n; i += 15)
+		b[result++] = ints_sum(a+i, min(15, n - i));
+	return result;
+}
+
+int ints_sums_by_tuple(const int *a, int n, int x, int *b)
+{
+	int result = 0;
+	for (int i = 0; i < n; i += x)
+		b[result++] = ints_sum(a+i, min(x, n-i));
+	return result;
+}
+
+//Média
+
+double doubles_mean(const double *a, int n)
+{
+	return doubles_sum(a,n) / n;
+}
+
+//Máximo de um array
+
+double doubles_max_non_empty(const double *a, int n)
+{
+	assert(n > 0);
+	double result = a[0];
+	for (int i = 1; i < n; i++)
+		if (result < a[i])
+			result = a[i];
+	return result;
+}
+
+double doubles_max(const double *a, int n)	//caso geral
+{
+	double result = -INFINITY;
+	for (int i = 0; i < n; i++)
+		if (result < a[i])
+			result = a[i];
+	return result;
+}
+
+double doubles_max_r(double *a, int n)
+{
+	return n == 0 ? -INFINITY : max(a[0], doubles_max_r(a+1, n-1));
+}
+
+//Argumento do máximo
+
+int doubles_argmax(const double *a, int n)
+{
+	assert(n > 0);
+	int result = 0;
+	double m = a[0];
+	for (int i = 1; i < n; i++)
+		if (m < a[i])
+		{
+			/*result = i;
+			m = a[result];*/
+			m = a[result = i]; //expressao equivalente
+		}
+	return result;
+}
+
+//Argumento do minimo
+
+int doubles_argmin(const double *a, int n)
+{
+	assert(n > 0);
+	int result = 0;
+	double m = a[0];
+	for (int i = 1; i < n; i++)
+		if (m > a[i])
+			m = a[result = i];
+	return result;
+}
+
+//Procura de um valor no array
+
+int ints_find(const int *a, int n, int x)
+{
+	for (int i = 0; i < n; i++)
+		if (a[i] == x)
+			return i;
+	return -1;
+}
+
+//Busca do fim para o principio
+
+int ints_find_last(const int *a, int n, int x)
+{
+	int result = n-1;
+	while (result >= 0 && a[result] != x)
+		result--;
+	return result;
+}
+
+//Procurar todos os valores iguais num array
+
+int  ints_find_all(const int *a, int n, int x, int *b)
+{
+	int result = 0;
+	for (int i = 0; i < n; i++)
+		if (a[i] == x)
+			b[result++] = i;
+	return result;
+	ints_println_basic(b, n);
+}
+
+int ints_nub(const int *a, int n, int *b)
+{
+	int result = 0;
+	for (int i = 0; i < n; i++)
+		if (ints_find(b, result, a[i]) == -1)
+			b[result++] = a[i];
+
+		return result;
+}
+
+int ints_find_equal_arrays(const int *a, const int n, const int *b, int m)
+{
+	int result = n == m;
+	int i = 0;
+	while (result && i < n)
+		if (a[i] != b[i])
+			result = 0;
+		else
+			i++;
+	return result;
+}
+
+int doubles_count_while(const double*a, int n, double x)
+{
+	int result = 0;
+	while (result < n && a[result] == x)
+		result++;
+	return result;
+}
+
+int doubles_unique(const double *a, int n, double *b)
+{
+	int result = 0;
+	int i = 0;
+	while (i < n)
+	{
+		int z = doubles_count_while(a+i, n-i, a[i]);
+		b[result++] = a[i];
+		i += z;
+	}
+	return result;
+}
+
+int doubles_unique_r(const double *a, int n, double *b)
+{
+	int result = 0;
+	if (n > 0)
+	{
+		int z = doubles_count_while(a, n, *a);
+		*b = *a;
+		result = 1 + doubles_unique_r(a+z, n-z, b+1);
+	}
+	return result;
+}
+
+int ints_rank_general(const int *a, int n, int x)		//nº de elementos do array om valor menor a x
+{
+	int result = 0;
+	for (int i = 0; i < n; i++)
+		if (a[i] < x)
+			result++;
+	return result;
+}
+
+int ints_rank(const int *a, int n, int x)
+{
+	int result = 0;
+	while (n > 0)
+	{
+		int m = n/2;
+		if (x <= a[m])
+			n = m;
+		else
+		{
+			result += m+1;
+			a += m+1;
+			n -= m+1;
+		}
+	}
+	return result;
+}
+
+int ints_is_sorted(int *a, int n)		//par de elementos consecutivos fora de ordem
+{
+	for (int i = 1; i < n; i++)
+		if (a[i-1] > a[i])
+			return 0;
+	return 1;
+}
+
+int ints_bfind(const int *a, int n, int x)		//Busca dicotómica
+{
+	int r = ints_rank(a, n, x);
+	return r < n && a[r] == x ? r : -1;
+}
+
+void ints_exchange(int *a, int x, int y)	//Trocando dois elementos num array
+{
+	int m = a[x];
+	a[x] = a[y];
+	a[y] = m;
+}
+
+//Ordenação de arrays
+
+void ints_sort_last(int *a, int n)
+{
+	while (n > 1 && a[n-2] > a[n-1])
+	{
+		ints_exchange(a, n-2, n-1);
+		n--;
+	}
+}
+
+int ints_insert(int *a, int n, int x)
+{
+	int result = n;
+	a[result++] = x;
+	ints_sort_last(a, result);
+	return result;
+}
+
+void inst_isort(int *a, int n)
+{
+	for (int i = 2; i <= n; i++)
+		ints_sort_last(a,i);
+}
+
+int ints_copy(const int *a, int n, int *b)
+{
+	if (n < 0)
+		n = 0;
+	memmove(b, a, n*sizeof(int));
+	return n;
+}
+
+int ints_merge(const int *a, int n, const int *b, int m, int *c)
+{
+	int result = 0;
+	int i = 0;
+	int j = 0;
+	while (i < n && j < m)
+		if (a[i] <= b[j])
+			c[result++] = a[i++];
+		else
+			c[result++] = b[i++];
+	result += ints_copy(a + i, n - i, c+result);
+	result += ints_copy(a + j, m - j, c+result);
+	return result;
+}
+
+int *ints_new(int n)
+{
+	return (int *) malloc (n * sizeof(int));
+}
+
+void ints_msort(int *a, int n)
+{
+	if (n > 1)
+	{
+		int m = n/2;
+		ints_msort(a, m);
+		ints_msort(a+m, n-m);
+		//int b[n];
+		int *b = ints_new(n);
+		ints_merge(a, m, a+m, n-m, b);
+		ints_copy(b, n, a);
+		free(b);
+	}
+}
+
+//Medição do tempo de execução
+
+int count_to(int n)
+{
+	int result = 0;
+	for (int i = 0; i < n; i++)
+		result++;
+	return result;
+}
+
+int millesecs(clock_t x)
+{
+	return (int) round(x * 1000.0 / CLOCKS_PER_SECOND);
+}
+
+void hello_name(const char *s)
+{
+	printf("Hello %s\n", s);
+}
+
+char *str_dup(const char *s)			//duplica uma cadeia
+{
+	char *result = (char *) malloc(strlen(s) + 1);
+	strcpy(result, s);
+	return result;
+}
+
+//Leitura de linhas inteiras
+
+int str_readline(FILE *f, char *s)			//de um ficheiro
+{
+	int result = EOF;
+	char *p = fgets(s, INT_MAX, f);
+	if (p != NULL)
+	{
+		result = (int) strlen(s);
+		if (result > 0 && s[result-1] == '\n')
+			s[--result] = '\0';
+	}
+	return result;
+}
+
+int str_getline(char *s)				//da consola
+{
+	return str_readline(stdin, s);
+}
+
+//Ler cadeias, linha a linha
+
+int strings_read(FILE *f, char **a)		//de um ficheiro
+{
+	int result = 0;
+	char line[MAX_LINE_LENGTH];
+	while (str_readline(f, line) != EOF)
+		a[result++] =str_dup(line);
+	return result;
+}
+
+int strings_get(char **a)				//da consola -> stdin representa a consola do windows
+{
+	return strings_read(stdin, a);
+}
+
+//Ler cadeias, palavra a palavra
+
+int strings_readwords(FILE *f, char **a)		//de um ficheiro
+{
+	int result = 0;
+	char word[MAX_LINE_LENGTH];
+	while (fscanf(f, "%s", word) != EOF)
+		a[result++] = str_dup(word);
+	return result;
+}
+
+int strings_getwords(char **a)					//da consola
+{
+	return strings_readwords(stdin, a);
+}
+
+//Escrever cadeias
+
+void strings_fprintf(FILE *f, char **s, int n, const char *fmt)	//para um fiheiro
+{
+	for (int i = 0; i < n; i++)
+		fprintf(f, fmt, s[i]);
+}
+
+void strings_printf(char **s, int n, const char *fmt)	//para a consola
+{
+	strings_fprintf(stdout, s, n, fmt);		//stdout representa a consola
+}
+
+//Escrever cadeias, com separador
+
+void strings_write(FILE *f, char **s, int n, const char *separator)
+{
+	if (n > 0)
+	{
+		fprintf(f, "%s", s[0]);
+		for (int i = 1; i < n; i++)
+			fprintf(f, "%s%s", separator, s[i]);	
+	}
+}
+
+void strings_print(char **s, int n, const char *separator)
+{
+	strings_write(stdout, s, n, separator);
+}
+
+//Escrever cadeias e mudar de linha
+
+void strings_writeln(FILE *f, char **s, int n, const char *separator)		//num fiheiro
+{
+	strings_write(f, s, n, separator);
+	fprintf(f, "\n");
+}
+
+void strings_println(char **s, int n, const char *separator)				//na consola
+{
+	strings_writeln(stdout, s, n, separator);
+}
+
+void strings_fprintfln(FILE *f, char **s, int n, const char *fmt)
+{
+	strings_fprintf(f, s, n, fmt);
+	fprintf(f, "\n");
+}
+
+void stings_printfln(char **s, int n, const char *fmt)
+{
+	strings_fprintfln(stdout, s, n, fmt);
+}
+
+//Busca linear num array
+
+int strings_find(char **s, int n, const char *x)
+{
+	for (int i = 0; i < n; i++)
+	if (strcmp(s[i], x) == 0)
+		return i;
+	return -1;
+}
+
+int strings_rank(char **s, int n, const char *x)
+{
+	int result = 0;
+	while (n > 0)
+	{
+		int m = n / 2;
+		if (strcmp(x, s[m]) <= 0)
+			n = m;
+		else
+		{
+			result += m+1;
+			s += m+1;
+			n -= m+1;
+		}
+	}
+	return result;
+}
+
+int strings_bfind(char **s, int n, const char *x)
+{
+	int r = strings_rank(s, n, x);
+	return r < n && strcmp(s[r], x) == 0 ? r : -1;
+}
+
+//Ordenaçao de arrays de cadeias
+
+void strings_exchange(char **a, int x, int y)
+{
+	char *m = a[x];
+	a[x] = a[y];
+	a[y] = m;
+}
+
+void strings_sort_last(char **a, int n)
+{
+	int i = n-1;
+	while (i > 0 && strcmp(a[i-1], a[i]) > 0)
+	{
+		strings_exchange(a, i-1, i);
+		i--;
+	}
+}
+
+void strings_isort(char **a, int n)
+{
+	for (int i = 2; i <= n; i++)
+	strings_sort_last(a, i);
+}
+
+//Estruturas
+
+typedef struct {
+int x;
+int y;
+} Point;
+
+//Euclidean distance
+
+double distance(Point p, Point q)
+{
+	return sqrt((p.x-q.x)*(p.x-q.x) + (p.y-q.y)*(p.y-q.y));
+}
+
+//q.y - p.y r.y - q.y
+//--------- == ---------
+//q.x - p.x r.x - q.x
+int collinear(Point p, Point q, Point r)
+{
+	return (q.x-p.x)*(r.y-p.y) == (r.x-p.x)*(q.y-p.y);
+}
+
+//Construtor
+
+Point point(int x, int y)
+{
+	Point result;
+	result.x = x;
+	result.y = y;
+	return result;
+}
+
+typedef struct {
+	const char *code;
+	const char *destination;
+	int departure;
+} Flight;
+
+Flight flight(const char *code, const char *destination, int departure)
+{
+	Flight result;
+	result.code = code;
+	result.destination = destination;
+	result.departure = departure;
+	return result;
+}
+
+//Ler para array
+
+int flights_read(FILE *f, Flight *a)
+{
+	int result = 0;
+	char code[16];
+	char destination[64];
+	int departure;
+	while (fscanf(f, "%d%s%s", &departure, code, destination) != EOF)
+		a[result++] = flight(str_dup(code), str_dup(destination), departure);
+	return result;
+}
+
+//Escrever para array
+
+void flights_write(FILE *f, Flight *a, int n)
+{
+	for (int i = 0; i < n; i++)
+		fprintf(f, "[%d][%s][%s]\n",
+			a[i].departure, a[i].code, a[i].destination);
+}
+
+//voos para um dado destino
+
+int flights_find_to_destination(Flight *a, int n, char *destination, int *b)
+{
+	int result = 0;
+	for (int i = 0; i < n; i++)
+		if (strcmp(a[i].destination, destination) == 0)
+			b[result++] = i;
+	return result;
+}
+
+//Escrever os voos de um array cujos indices vêm noutro array
+
+void flights_write_some(FILE *f, Flight *a, int *b, int n)
+{
+	for (int i = 0; i < n; i++)
+		fprintf(f, "[%d][%s][%s]\n",
+			a[b[i]].departure, a[b[i]].code, a[b[i]].destination);
+}
+
+void points_exchange(Point *a, int x, int y)
+{
+	Point m = a[x];
+	a[x] = a[y];
+	a[y] = m;
+}
+
+void points_isort_by_x(Point *a, int n)
+{
+	for (int i = 1; i < n; i++)
+	{
+		int j = i;
+		while (j > 0 && a[j-1].x > a[j].x)
+		{
+			points_exchange(a, j-1, j);
+			j--;
+		}
+	}
+}
+
+int points_read(FILE *f, Point *a)
+{
+	int result = 0;
+	int x, y;
+	while (scanf("%d%d", &x, &y) != EOF)
+		a[result++] = point(x, y);
+	return result;
+}
+
+void points_fprintf(FILE *f, Point *a, int n, const char *fmt)
+{
+	for (int i = 0; i < n; i++)
+	fprintf(f, fmt, a[i].x, a[i].y);
+}
+
+void points_fprintfln(FILE *f, Point *a, int n, const char *fmt)
+{
+	points_fprintf(f, a, n, fmt);
+	fprintf(f, "\n");
+}
+
+//comparação por x e depois por y
+
+int point_cmp_x_y(Point p, Point q)
+{
+	int result = p.x - q.x;
+	if (result == 0)
+		result = p.y - q.y;
+	return result;
+}
+
+//ordenação de arrays de pontos
+
+void points_isort_by_x_y(Point *a, int n)
+{
+	for (int i = 1; i < n; i++)
+	{
+		int j = i;
+		while (j > 0 && point_cmp_x_y(a[j-1], a[j]) > 0)
+		{
+			points_exchange(a, j-1, j);
+			j--;
+		}
+	}
+}
+
+typedef int (*Point_cmp)(Point, Point);
+
+void points_isort_gen(Point *a, int n, Point_cmp cmp)
+{
+	for (int i = 1; i < n; i++)
+	{
+		int j = i;
+		while (j > 0 && cmp(a[j-1], a[j]) > 0)
+		{
+			points_exchange(a, j-1, j);
+			j--;
+		}
+	}
+}
+
+//ordenaçao por y e depois por x
+
+int point_cmp_y_x(Point p, Point q)
+{
+	int result = p.y - q.y;
+	if (result == 0)
+		result = p.x - q.x;
+	return result;
+}
+
+//angulo e magnitude
+
+double angle(Point p)
+{
+	double result = atan2(p.y, p.x);
+	if (result < 0)
+		result += 2*M_PI;
+	return result;
+}
+
+double magnitude(Point p)
+{
+	return sqrt(p.x*p.x + p.x*p.y);
+}
+
+//comparaçao por angulo e magnitude
+
+int sign(double x)
+{
+	return (x > 0) - (x < 0);
+}
+
+int point_cmp_by_angle(Point p, Point q)
+{
+	int result = sign(angle(p) - angle(q));
+	if (result == 0)
+		result = sign(magnitude(p) - magnitude(q));
+	return result;
+}
+
+void points_println_with_angle(Point *a, int n, const char *fmt)
+{
+	for (int i = 0; i < n; i++)
+	printf("{%d,%d,%.2f}", a[i].x, a[i].y, angle(a[i]));
+	printf("\n");
+}
+
+void flights_exchange(Flight *a, int x, int y)
+{
+	Flight m = a[x];
+	a[x] = a[y];
+	a[y] = m;
+}
+
+typedef int(*Flight_cmp)(Flight, Flight);
+
+void flights_isort_gen(Flight *a, int n, Flight_cmp cmp)
+{
+	for (int i = 1; i < n; i++)
+	{
+		int j = i;
+		while (j > 0 && cmp(a[j-1], a[j]) > 0)
+		{
+			flights_exchange(a, j-1, j);
+			j--;
+		}
+	}
+}
+
+int flight_cmp_by_destination(Flight x, Flight y)
+{
+	int result = strcmp(x.destination, y.destination);
+	if (result == 0)
+		result = strcmp(x.code, y.code);
+	return result;
+}
+
+int flight_cmp_by_code(Flight x, Flight y)
+{
+	return strcmp(x.code, y.code);
+}
+
+int strings_copy(char **a, int n, char **b) 
+{ 
+    if (n < 0) 
+        n = 0; 
+    memmove(b, a, n * sizeof(char *));
+    return n; 
+}
+
+int strings_merge(char **a, int n, char **b, int m, char **c)
+{
+    int result = 0;
+    int i = 0;
+    int j = 0;
+    while (i < n && j < m)
+        if (strcmp(a[i], b[j]) <=0 )
+            c[result++] = a[i++];
+        else
+            c[result++] = b[j++];
+    result += strings_copy(a + i, n - i, c+result);
+    result += strings_copy(b + j, m - j, c+result);
+    return result;
+}
+
+void strings_msort(char **a, int n)
+{
+    if (n > 1)
+    {
+        int m = n / 2;
+        strings_msort(a, m);
+        strings_msort(a+m, n-m);
+        char **b = (char **) malloc(100000 * sizeof(char *));
+        strings_merge(a, m, a+m, n-m, b);
+        strings_copy(b, n, a);
+        free(b);
+    }
+}
+
+int strings_count_while( char **a, int n, char *x) 
+{ 
+    int result = 0; 
+    while (result < n && strcmp(a[result],x) == 0)
+        result++; 
+    return result; 
+} 
+
+/*int strings_unique(char **a, int n, char **b) //original
+{ 
+    int result = 0; 
+    int i = 0; 
+    while (i < n) 
+    { 
+        int z = strings_count_while(a+i, n-i, a[i]); 
+        b[result++] = a[i]; 
+        i += z; 
+    } 
+    return result; 
+}*/
+
+int strings_unique(char **a, int n, char **b, int x) 
+{ 
+    int result = 0; 
+    int i = 0; 
+    //int x;
+    while (i < n) 
+    { 
+        int z = strings_count_while(a+i, n-i, a[i]);
+        if (z >= x)
+        { 
+        	b[result++] = a[i]; 
+        	 
+        }
+        i += z;
+    } 
+    return result; 
+}
+
+
+
+
+
+
+
+
+
+
+/*----------------End-of-Functions----------------*/
+
+/*----------------Test-Functions----------------*/
+
+void test_sum_naturals(void)
+{
+	int x;
+	scanf("%d", &x);
+	printf("%d\n", sum_naturals(x));
+}
+
+void test_sum_from_to(void)
+{
+	int x;
+	int y;
+	scanf("%d%d", &x, &y);
+	printf("%d\n", sum_from_to(x, y));
+}
+
+void test_sum_multiples(void)
+{
+	int r;
+	int n;
+	scanf("%d%d", &r, &n);
+	printf("%d", sum_multiples(r,n));
+}
+
+void test_grade(void)
+{
+	double lab;
+	double exam;
+	while (scanf("%lf%lf", &lab, &exam) !=EOF)
+	{
+		printf("%f\n", weighted_average(lab, exam));
+		printf("%f\n", grade(lab, exam));
+		printf("%d\n", final_grade(lab, exam));
+	}
+}
+
+/*void test_exam(void)
+{
+	double lab;
+	int goal;
+	while (scanf("%lf%d", &lab, &goal) !=EOF)
+	{
+		printf("%f\n", exam_exact(lab, goal));
+		printf("%f\n", exam_one_decimal(lab, goal));
+		double z = exam(lab, goal);
+		printf("%f\n", z);
+		printf("%d\n", grade(lab, z));
+		printf("%d\n", grade(lab, z-0.1));
+	}
+}*/
+
+void test_weighted_average(void)
+{
+	double lab;
+	double exam;
+	scanf("%lf%lf", &lab, &exam); //lf numeros decimais normais
+	printf("%f\n", weighted_average(lab, exam)); //f numeros deimais
+}
+
+//addition
+
+void test_addition(void)
+{
+	int x;
+	int y;
+	while (scanf("%d%d", &x, &y) !=EOF)
+	{
+		printf("%d\n", x+y);
+	}
+}
+
+//operations (int type)
+
+void test_operations_int(void)
+{
+	int x;
+	int y;
+	while (scanf("%d%d", &x, &y) !=EOF)
+	{
+		printf("%d\n", x+y);
+		printf("%d\n", x-y);
+		printf("%d\n", x*y);
+		printf("%d\n", x/y);
+		printf("%d\n", x%y);
+
+	}
+}
+
+//operations (double type)
+
+void test_operations_double(void)
+{
+	double x;
+	double y;
+	while (scanf("%lf%lf", &x, &y) !=EOF)
+	{
+		printf("%f\n", x+y);
+		printf("%f\n", x-y);
+		printf("%f\n", x*y);
+		printf("%f\n", x/y);
+	}
+}
+
+void test_roaming(void)
+{
+	double seconds;
+	while (scanf("%lf", &seconds) !=EOF)
+	{
+		printf("%f\n", roaming_exact(seconds));
+		printf("%f\n", roaming(seconds));
+	}
+}
+
+void test_parking(void)
+{
+	double minutes;
+	while (scanf("%lf", &minutes) !=EOF)
+	{
+		printf("%f\n", parking(minutes));
+	}
+}
+
+void test_sum_geometrics(void)
+{
+	double x;
+	int n;
+	while (scanf("%lf%d", &x, &n) !=EOF)
+	{
+		double z = sum_geometric(x,n);
+		printf("%f\n", z);
+		printf("%e\n", z);
+		printf("%g\n", z);
+	}
+}
+
+void test_sum_squares(void)
+{
+	int a;
+	while (scanf("%d", &a) != EOF)
+	{
+		printf("%f\n", sum_squares(a));
+		printf("%f\n", sum_squares_e(a));
+		printf("%f\n", sum_squares_f(a));
+	}
+}
+
+void test_sum_progression(void)
+{
+	int x0, r, n;
+	while (scanf("%d%d%d", &x0, &r, &n) !=EOF)
+		printf("%d\n", sum_progression(x0, r, n));
+}
+
+void test_sum_arithmetic(void)
+{
+	double x0, r;
+	int n;
+	while (scanf("%lf%lf%d", &x0, & r, &n) !=EOF)
+		printf("%f\n", sum_arithmetic(x0, r, n));
+}
+
+void test_sum_squares_from(void)
+{
+	double x, n;
+	while (scanf("%lf%lf", &x, &n) !=EOF)
+		printf("%f\n", sum_squares_from(x,n));
+}
+
+void test_sum_squares_tp(void)
+{
+	double n;
+	while (scanf("%lf", &n) !=EOF)
+		printf("%f\n", sum_squares_tp(n));
+}
+
+void test_sum_powers_from(void)
+{
+	double x, n, y;
+	while (scanf("%lf%lf%lf", &x, &n, &y) !=EOF)
+		printf("%f\n", sum_powers_from(x, n, y));
+}
+
+void test_two_sequences(void)
+{
+	int n;
+	while (scanf("%d", &n) !=EOF)
+	{
+		printf("%f\n", sum_powers_from(1.0,n,-1.0));
+		printf("%f\n", sum_powers_from(1.0,n,-2.0));
+	}
+}
+
+void test_sum_progression_t(void)
+{
+	double x, r, n;
+	while (scanf("%lf%lf%lf", &x, &r, &n) !=EOF)
+		printf("%f\n", sum_progression_t(x, r, n));
+}
+
+void test_factorial(void)
+{
+	int n;
+	while (scanf("%d", &n) !=EOF)
+		printf("%.15g\n", factorial(n));
+}
+
+void test_count_terms(void)
+{
+	double x;
+	while (scanf("%lf", &x) !=EOF)
+	{
+		printf("%d\n", count_terms(x));
+		printf("%.15f\n", sum_geometric(0.5, count_terms(x)));
+	}
+}
+
+void test_cycle(void)
+{
+	int x;
+	while (scanf("%d", &x) !=EOF)
+	{
+		show_cycle(x);
+	}
+}
+
+void test_cycle_length(void)
+{
+	int x;
+	while (scanf("%d", &x) !=EOF)
+	{
+		show_cycle(x);
+		printf("%d\n", cyle_length(x));
+	}
+}
+
+void test_digits(void)
+{
+	int x;
+	while (scanf("%d", &x) != EOF)
+	{
+		int a[10];
+		int n = digits(x, a);
+		ints_println_basic(a, n);
+	}
+}
+
+void test_mirror(void)
+{
+	int x;
+	while (scanf("%d", &x) != EOF)
+	{
+		int a[10];
+		int n = digits(x, a);
+		ints_println_basic(a, n);
+		int b[10];
+		int m = mirror(a,n,b);
+		ints_println_basic(b, m);
+	}
+}
+
+void test_ints_get()
+{
+	int a[1000];
+	int n = ints_get(a);
+	int b[1000];
+	int m = mirror(a, n, b);
+	ints_println_basic(a, n);
+	ints_println_basic(b, m);
+}
+
+void test_doubles_get()
+{
+	double a[1000];
+	int n = doubles_get(a);
+	doubles_println_basic(a,n);
+}
+
+void test_doubles_count(void)
+{
+	double x;
+	scanf("%lf", &x);
+	double a[1000];
+	int n = doubles_get(a);
+	printf("%d\n", doubles_count(a, n, x));
+}
+
+void test_ints_sum(void)
+{
+	int a[1000];
+	int n = ints_get(a);
+	printf("%d\n", ints_sum(a, n));
+}
+
+/*void test_doubles_sum(void)
+{
+	double a[1000];
+	int n = doubles_get(a);
+	printf("%d\n", doubles_sum(a, n));
+}*/
+
+void test_ints_sum_by_tuple(void)
+{
+	int a[1000];
+	int n = ints_get(a);
+	int b[1000];
+	ints_println_basic(b, ints_sums_by_tuple(a, n, 15, b));
+}
+
+/*void test_doubles_mean(void)
+{
+	double a[1000];
+	int n = doubles_get(a);
+	printf("%d\n", doubles_mean(a, n));
+}*/
+
+/*void test_doubles_max(void)
+{
+	double a[1000];
+	int n = doubles_get(a);
+	printf("%d\n", doubles_max(a, n));
+}*/
+
+void test_doubles_argmax(void)
+{
+	double a[1000];
+	int n = doubles_get(a);
+	printf("%d\n", doubles_argmax(a, n));
+}
+
+void test_doubles_argmin(void)
+{
+	double a[1000];
+	int n = doubles_get(a);
+	printf("%d\n", doubles_argmin(a, n));
+}
+
+void test_args(void)
+{
+	double a[1000];
+	int n = doubles_get(a);
+	printf("%d\n", doubles_argmax(a, n));
+	printf("%d\n", doubles_argmin(a, n));
+}
+
+void test_ints_find(void)
+{
+	int a[1000];
+	int n = ints_get(a);
+	int x;
+	scanf("%d", &x);
+	printf("%d\n", ints_find(a, n, x));
+}
+
+void test_ints_find_last(void)
+{
+	int a[1000];
+	int n = ints_get(a);
+	int x;
+	scanf("%d", &x);
+	printf("%d\n", ints_find_last(a, n, x));
+}
+
+void test_ints_find_all(void)
+{
+	int a[1000];
+	int b[1000];
+	int n = ints_get(a);
+	int x;
+	scanf("%d", &x);
+	ints_find_all(a, n, x, b);
+}
+
+void test_ints_nub(void)
+{
+	int a[1000];
+	int n= ints_get(a);
+	int b[1000];
+	ints_println_basic(b, ints_nub(a, n, b));
+}
+
+void test_ints_equal_arrays(void)
+{
+	int a[1000];
+	int n = ints_get(a);
+	freopen("CON", "r", stdin);
+	int b[1000];
+	int m = ints_get(b);
+	printf("%d\n", ints_find_equal_arrays(a, n, b, m));
+}
+
+void test_doubles_count_while(void)
+{
+	double a[1000];
+	int x;
+	int n = doubles_get(a);
+	scanf("%d", &x);
+	printf("%d\n", doubles_count_while(a, n, x));
+}
+
+void test_doubles_unique(void)
+{
+	double a[1000];
+	double b[1000];
+	int n = doubles_get(a);
+	int m = doubles_unique(a, n, b);
+	doubles_println_basic(b, m);
+}
+
+void test_ints_insert(void)
+{
+	int a[1000];
+	int n = 0;
+	int x;
+	while (scanf("%d", &x) != EOF)
+	{
+		n = ints_insert(a, n, x);
+		ints_println_basic(a, n);
+	}
+}
+
+void test_ints_isort(void)
+{
+	int a[1000];
+	int n;
+	while ((n = ints_get(a)) != 0)
+	{
+		ints_println_basic(a, n);
+		inst_isort(a, n);
+		ints_println_basic(a, n);
+		freopen("CON", "r", stdin);
+		printf("------\n");
+	}
+}
+
+void test_ints_merge(void)
+{
+	int a[1000];
+	int n = ints_get(a);
+	freopen("CON", "r", stdin);
+	int b[1000];
+	int m = ints_get(b);
+	ints_println_basic(a, n);
+	ints_println_basic(b, m);
+	inst_isort(a, n);
+	inst_isort(b, m);
+	ints_println_basic(a, n);
+	ints_println_basic(b, m);
+	int c[2000];
+	int p = ints_merge(a, n, b, m, c);
+	ints_println_basic(c, p);
+}
+
+void test_ints_msort(void)
+{
+	int a[1000];
+	int n;
+	while ((n = ints_get(a)) != 0)
+	{
+		ints_println_basic(a, n);
+		ints_msort(a, n);
+		ints_println_basic(a, n);
+		freopen("CON", "r", stdin);
+		printf("------\n");
+	}
+}
+
+void test_timing_count_to(void)
+{
+	int x;
+	while(scanf("%d", &x) != EOF)
+	{
+		clock_t t1 = clock();
+		clock_t t2 = clock();
+		printf("%d\n", count_to(x));
+		printf("%d %d %d\n", (int)t1, (int)t2, (int)(t2-t1));
+		printf("%d\n", millesecs(t2 - t1));
+	}
+}
+
+void test_timing_isort(void)
+{
+	int a[MAX_SIZE];
+	int n =  ints_get(a);
+	clock_t t1 = clock();
+	inst_isort(a, n);
+	clock_t t2 = clock();
+	assert(ints_is_sorted(a,n));
+	printf("%d\n", millesecs(t2 - t1));
+}
+
+void test_timing_msort(void)
+{
+	int *a = ints_new(MAX_SIZE);
+	int n = ints_get(a);
+	clock_t t1 = clock();
+	ints_msort(a, n);
+	clock_t t2 = clock();
+	//assert(ints_is_sorted(a,n));
+	printf("%d\n", millesecs(t2-t1));
+	free(a);
+}
+
+void test_hello_name(void)
+{
+	char name[16];
+	while (scanf("%s", name) != EOF)
+		hello_name(name);
+}
+
+void test_hello_many(void)
+{
+	char *names[10];
+	int n = 0;
+	char word[16];
+	while (scanf("%s", word) != EOF)
+	{
+		names[n] = (char *) malloc(strlen(word) + 1);		//strlen dá o comprimento da cadeia em argumento
+		strcpy(names[n++], word);							//copia Bites de uma cadeia para uma pos na memoria 
+	}
+	for (int i = 0; i < n; i++)
+		hello_name(names[i]);
+}
+
+void test_read_many_lines(void)
+{
+	char *s[MAX_LINES];
+	int n = 0;
+	char line[MAX_LINE_LENGTH];
+	while (str_getline(line) != EOF)
+	{
+		s[n] = (char *) malloc(strlen(line) +1);
+		strcpy(s[n++], line);
+	}
+	for (int i = 0; i < n; i++)
+		printf("[%s]\n", s[i]);
+}
+
+void test_strings_get(void)
+{
+	char *s[MAX_WORDS];
+	int n = strings_get(s);
+	strings_printf(s, n, "{%s}\n");
+}
+
+void test_strings_isort_demo(void)
+{
+	char *a[1000];
+	int n;
+	while ((n = strings_getwords(a)) != 0)
+	{
+		strings_isort(a, n);
+		strings_println(a, n, " ");
+		//freopen("/dev/tty", "r", stdin); // Unix
+		freopen("CON", "r", stdin); // Windows
+		printf("------\n");
+	}
+}
+
+void test_points(void)
+{
+	int x1, y1, x2, y2, x3, y3;
+	while (scanf("%d%d%d%d%d%d", &x1, &y1, &x2, &y2, &x3, &y3) != EOF)
+	{
+		Point p1 = point(x1, y1);
+		Point p2 = point(x2, y2);
+		Point p3 = point(x3, y3);
+		double d12 = distance(p1, p2);
+		double d23 = distance(p2, p3);
+		double d31 = distance(p3, p1);
+		int c = collinear(p1, p2, p3);
+		printf("%.4f %.4f %.4f\n", d12, d23, d31);
+		printf("%d\n", c);
+	}
+}
+
+void test_flights_read_write(char *filename)
+{
+	FILE *f = fopen(filename, "r");
+	assert(f != NULL);
+	Flight flights[MAX_FLIGHTS];
+	int n_flights = flights_read(f, flights);
+	flights_write(stdout, flights, n_flights);
+}
+
+void test_flight_flights_find_to_destination(char *filename)
+{
+	FILE *f = fopen(filename, "r");
+	assert(f != NULL);
+	Flight flights[MAX_FLIGHTS];
+	int n_flights = flights_read(f, flights);
+	char line[MAX_LINE_LENGTH];
+	while (scanf("%s", line) != EOF)
+	{
+		int b[n_flights];
+		int n = flights_find_to_destination(flights, n_flights, line, b);
+		flights_write_some(stdout, flights, b, n);
+	}
+}
+
+void test_points_isort_by_x(void)
+{
+	Point a[1000];
+	int n = points_read(stdin, a);
+	points_fprintfln(stdout, a, n, "<%d,%d>");
+	points_isort_by_x(a, n);
+	points_fprintfln(stdout, a, n, "[%d,%d]");
+}
+
+void test_points_isort_by_x_y(void)
+{
+	Point a[1000];
+	int n = points_read(stdin, a);
+	points_fprintfln(stdout, a, n, "<%d,%d>");
+	points_isort_by_x_y(a, n);
+	points_fprintfln(stdout, a, n, "[%d,%d]");
+}
+
+void test_points_isort_by_y_x(void)
+{
+	Point a[1000];
+	int n = points_read(stdin, a);
+	points_fprintfln(stdout, a, n, "<%d,%d>");
+	points_isort_gen(a, n, point_cmp_y_x);
+	points_fprintfln(stdout, a, n, "[%d,%d]");
+}
+
+void unit_test_sign(void)
+{
+	assert(sign(3.14) == 1);
+	assert(sign(-2.0) == -1);
+	assert(sign(0.0) == 0);
+	assert(sign(-0.0) == 0);
+}
+
+void test_points_isort_by_angle(void)
+{
+	Point a[1000];
+	int n = points_read(stdin, a);
+	points_fprintfln(stdout, a, n, "<%d,%d>");
+	points_isort_gen(a, n, point_cmp_by_angle);
+	points_println_with_angle(a, n, "[%d,%d]");
+}
+
+void test_flights_isort_gen(char *filename, Flight_cmp cmp)
+{
+	FILE *f = fopen(filename, "r");
+	assert(f != NULL);
+	Flight flights[MAX_FLIGHTS];
+	int n_flights = flights_read(f, flights);
+	flights_isort_gen(flights, n_flights, cmp);
+	flights_write(stdout, flights, n_flights);
+}
+
+//Festa_problema_A
+
+void test_problem_A(char *filename)
+{
+	int x;
+	char *b[100000];
+	FILE *f = fopen(filename, "r");
+	assert(f != NULL);
+	char *garrafas[100000];
+	int n_garrafas = strings_read(f, garrafas);
+	strings_msort(garrafas, n_garrafas);
+	scanf("%d", &x);
+	int z = strings_unique(garrafas, n_garrafas, b, x);
+	printf("%d\n", z);
+	if (z > 0)
+	{
+		strings_println(b, z, "\n");
+	}
+}
+
+
+
+
+/*----------------End-of-test-functions----------------*/
+
+/*----------------Unit-Tests----------------*/
+
+void unit_test_doubles_count(void)
+{
+	double a1[16] = {6,7,1,8,9,3,3,5,6,7,3,9,6,1,1,1};
+	assert(doubles_count(a1, 16, 1) == 4);
+	assert(doubles_count(a1, 16, 9) == 2);
+	assert(doubles_count(a1, 16, 2) == 0);
+	assert(doubles_count(a1, 8, 1) == 1);
+	assert(doubles_count(a1, 8, 2) == 0);
+	assert(doubles_count(a1, 0, 6) == 0);
+}
+
+void unit_test_doubles_sum(void)
+{
+	double a1[8] = {6,7,1,8,9,3,3,5};
+	assert(doubles_sum(a1, 8) == 42);
+	assert(doubles_sum(a1, 4) == 22);
+	assert(doubles_sum(a1, 2) == 13);
+	assert(doubles_sum(a1, 1) == 6);
+	assert(doubles_sum(a1, 0) == 0);
+	double a2[10] = {1,5,9,13,17,21,25,29,33,37};
+	assert(doubles_sum(a2, 10) == 190);
+	assert(doubles_sum(a2, 5) == 45);
+	double a3[8] = {4,9,4,4,5,2,7,5};
+	assert(doubles_sum(a3, 8) == 40);
+	assert(doubles_sum(a3, 5) == 26);
+	assert(doubles_sum(a3+3, 5) == 23);
+	assert(doubles_sum(a3+2, 4) == 15);
+}
+
+void unit_test_doubles_max(void)
+{
+	double a1[16] = {6,7,3,8,9,3,3,5,6,7,3,9,6,1,8,3};
+	assert(doubles_max(a1, 16) == 9);
+	assert(doubles_max(a1, 4) == 8);
+	assert(doubles_max(a1, 1) == 6);
+	double a2[10] = {32,67,81,23,27,12,90,13,75,13};
+	assert(doubles_max(a2, 10) == 90);
+	assert(doubles_max(a2, 6) == 81);
+	assert(isinf(doubles_max(a2, 0)));						//isinf??
+	double a3[5] = {7e15,3e18,2e14,4e22,3e13};
+	assert(doubles_max(a3, 5) == 4e22);
+	//double a4[5] = {7e-153,3e-185,2e-140,9e-225,3e-213};	//testes unitarios errados
+	//assert(doubles_max(a4, 5) == 2e-140);
+	//double a5[5] = {-7e200,-3e185,-2e240,-7e225,-3e280};
+	//assert(doubles_max(a5, 5) == -3e185);
+	double a6[8] = {4,9,4,4,5,2,7,5};
+	assert(doubles_max(a6, 8) == 9);
+	assert(doubles_max(a6, 5) == 9);
+	assert(doubles_max(a6+3, 5) == 7);
+	assert(doubles_max(a6+2, 4) == 5);
+}
+
+void unit_test_ints_find(void)
+{
+	int a[8] = {6,2,9,1,4,2,7,5};
+	assert(ints_find(a, 8, 9) == 2);
+	assert(ints_find(a, 8, 5) == 7);
+	assert(ints_find(a, 8, 6) == 0);
+	assert(ints_find(a, 8, 3) == -1);
+	assert(ints_find(a, 4, 9) == 2);
+	assert(ints_find(a, 4, 5) == -1);
+	assert(ints_find(a, 4, 6) == 0);
+	assert(ints_find(a, 8, 3) == -1);
+	assert(ints_find(a, 1, 9) == -1);
+	assert(ints_find(a, 1, 6) == 0);
+	assert(ints_find(a, 0, 6) == -1);
+	assert(ints_find(a, 0, 4) == -1);
+}
+
+void unit_test_ints_nub(void)
+{
+	int a1[12] = {6,2,6,9,4,2,9,9,9,2,1,2};
+	int b1[12];
+	int m1 = ints_nub(a1, 12, b1);
+	int z1[5] = {6,2,9,4,1};
+	assert(ints_find_equal_arrays(b1, m1, z1, 5));
+
+	int a2[6] = {1,2,3,3,2,1};
+	int b2[6];
+	int m2 = ints_nub(a2, 6, b2);
+	int z2[3] = {1,2,3};
+	assert(ints_find_equal_arrays(b2, m2, z2, 3));
+
+	int a3[5] = {8,8,8,8,8};
+	int b3[5];
+	int m3 = ints_nub(a3, 5, b3);
+	assert(m3 == 1 && b3[0] == 8);
+}
+
+void unit_test_strcmp(void)
+{
+	assert(strcmp("lisboa", "faro") > 0);
+	assert(strcmp("quarteira", "queluz") < 0);
+	assert(strcmp("tavira", "Tavira") != 0);
+	assert(strcmp("lagos", "LAGOS") != 0);
+	assert(strcmp("silves", "silves") == 0);
+	assert(strcmp("braga", "braganca") < 0);
+	assert(strcmp("vila real de santo antonio", "vila real") > 0);
+	assert(strcmp("", "sagres") < 0);
+	assert(strcmp("alcoutim", "") > 0);
+	assert(strcmp("", "") == 0);
+}
+
+
+
+void unit_test_distance(void)
+{
+	Point p1 = point(2,4);
+	Point p2 = point(5,8);
+	assert(distance(p1, p2) == 5);
+	Point p3 = point(0,0);
+	Point p4 = point(1,1);
+	assert(distance(p3, p4) == sqrt(2));
+	assert(distance(p1, p3) == sqrt(20));
+	assert(distance(p1, p1) == 0);
+	assert(distance(p2, p4) == sqrt(65));
+}
+
+void unit_test_collinear(void)
+{
+	Point p1 = point(2,4);
+	Point p2 = point(5,8);
+	Point p3 = point(8,12);
+	assert(collinear(p1, p2, p3));
+	Point p4 = point(0,0);
+	Point p5 = point(1,1);
+	Point p6 = point(4,4);
+	assert(collinear(p4, p5, p6));
+	Point p7 = point(1000, 4);
+	assert(collinear(p1, p6, p7));
+	assert(!collinear(p4, p1, p2));
+}
+
+/*void unit_test_angle(void)
+{
+	assert(angle(point(1, 0)) == 0);
+	assert(angle(point(1, 1)) == M_PI_4);
+	assert(angle(point(0, 1)) == M_PI_2);
+	assert(angle(point(-1, 1)) == M_PI_2 + M_PI_4);
+	assert(angle(point(-1, 0)) == M_PI);
+	assert(angle(point(-1, -1)) == M_PI + M_PI_4);
+	assert(angle(point(0, -1)) == M_PI + M_PI_2);
+	assert(angle(point(1, -1)) == M_PI + M_PI_2 + M_PI_4);
+}*/
+
+void unit_test_magnitude(void)
+{
+	assert(magnitude(point(0, 0)) == 0.0);
+	assert(magnitude(point(0, 2)) == 2.0);
+	assert(magnitude(point(-7, 0)) == 7.0);
+	assert(magnitude(point(1, 1)) == sqrt(2.0));
+	assert(magnitude(point(3, 4)) == 5);
+	assert(magnitude(point(12, 5)) == 13);
+	assert(magnitude(point(12, -5)) == 13);
+	assert(magnitude(point(-12, 5)) == 13);
+	assert(magnitude(point(-12, -5)) == 13);
+}
+
+void unit_tests(void)
+{
+	unit_test_doubles_count();
+	unit_test_doubles_sum();
+	unit_test_doubles_max();
+	unit_test_ints_find();
+	unit_test_ints_nub();
+	unit_test_strcmp();
+	unit_test_distance();
+	unit_test_collinear();
+	//unit_test_angle();
+	//unit_test_magnitude();
+}
+
+
+/*----------------End-of-Unit-Tests----------------*/
+
+/*int main (void)
+{
+	unit_tests();
+	return 0;
+}*/
+
+//main para leitura de ficheiros
+
+int main(int argc, char **argv)
+{
+	test_problem_A(argv[1]);
+	return 0;
+}
