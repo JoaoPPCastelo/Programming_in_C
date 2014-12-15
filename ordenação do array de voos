@@ -1,68 +1,193 @@
 #include <stdio.h>
 #include <math.h>
-#include <assert.h>
-#include <string.h>
+#include <assert.h>     //Testes unitarios
+#include <limits.h>     //Infinity
+#include <string.h>     //caracteres
 #include <stdlib.h>
+#include <time.h>       //Função clock
+
+/*------Defines------*/
+
+#define CLOCKS_PER_SECOND 1000
+#define MAX_SIZE 510000     //Mais e o programa estoira XD XD (+/-)
+//#define INT_MAX 1000
+#define MAX_LINES 10000
+#define MAX_LINE_LENGTH 10000
+#define MAX_WORDS 10000
 #define MAX_FLIGHTS 1000
+
+/*-----\Defines------*/
+ 
+//Problem A
+ 
+typedef struct
+{
+    int x;
+    int y;
+} Point;
+ 
+double distance(Point p, Point q)
+{
+    return ((p.x-q.x)*(p.x-q.x) + (p.y-q.y)*(p.y-q.y));
+}
+ 
+typedef struct
+{
+    Point p1;
+    Point p2;
+    double distance;
+} TwoPoints;
+ 
+ 
+Point Point_construct(int x, int y)
+{
+    Point result;
+    result.x = x;
+    result.y = y;
+    return result;
+}
+ 
+TwoPoints TwoPoints_constructor(Point p1, Point p2)
+{
+    TwoPoints pp;
+    pp.p1 = p1;
+    pp.p2 = p2;
+    pp.distance = distance(p1, p2);
+    return pp;
+}
+ 
+int point_cmp_x_y(Point p, Point q)
+{
+    int result = p.x - q.x;
+    if (result == 0)
+        result = p.y - q.y;
+    return result;
+}
+ 
+int two_points_compare(TwoPoints p, TwoPoints q)
+{
+    int result = p.distance - q.distance;
+    if (result == 0)
+        result = point_cmp_x_y(p.p1, q.p1);
+    if (result == 0)
+        result = point_cmp_x_y(p.p2, q.p2);
+    return result;
+}
+ 
+void pair_points_exchange(TwoPoints *a, int i, int j)
+{
+    TwoPoints t = a[i];
+    a[i] = a[j];
+    a[j] = t;
+}
+ 
+void TwoPoints_i_sort(TwoPoints *a, int n)
+{
+    for (int i = 1; i < n; i++)
+    {
+        int j = i;
+        while (j > 0 && two_points_compare(a[j - 1], a[j]) > 0 )
+        {
+            pair_points_exchange(a, j-1, j);
+            j--;
+        }
+    }
+}
+ 
+int points_read(FILE *f, Point *a)
+{
+    int result = 0;
+    int x, y;
+    while (fscanf(f,"%d%d", &x, &y) != EOF)
+        a[result++] = Point_construct(x, y);
+    return result;
+}
+ 
+ 
+void POP_print(FILE *f, TwoPoints *pp, int n)
+{
+    for (int i = 0; i < n; i++){
+        printf("P1X%d P1Y%d P2X%d P2X%d D%f", pp->p1.x, pp->p1.y, pp->p2.x, pp->p2.y, pp->distance);
+        printf("\n");
+    }
+}
+ 
+void points_exchange(Point *a, int x, int y)
+{
+    Point m = a[x];
+    a[x] = a[y];
+    a[y] = m;
+}
+ 
+void points_isort_by_x_y(Point *a, int n)
+{
+    for (int i = 1; i < n; i++)
+    {
+        int j = i;
+        while (j > 0 && point_cmp_x_y(a[j-1], a[j]) > 0)
+        {
+            points_exchange(a, j-1, j);
+            j--;
+        }
+    }
+}
+
+void pair_constructor(Point *a, int n, TwoPoints *pair)
+{
+    int result = 0; 
+    for(int i = 0; i < n; i++)
+    {
+        for(int j = i + 1; j < n; j++){
+            pair[result++] = TwoPoints_constructor(a[i], a[j]);
+            if( point_cmp_x_y(a[i], a[j]) > 0)
+                pair[result-1] = TwoPoints_constructor(a[j], a[i]);
+        }
+    }
+}
+
+void pair_println(TwoPoints *pair, int n_Pair)
+{
+    for (int i = 0; i < n_Pair; i++)
+    {
+        printf("%d %d ", pair[i].p1.x, pair[i].p1.y);
+        printf("%d %d ", pair[i].p2.x, pair[i].p2.y);
+        printf("%0.4f\n", sqrt(pair[i].distance) );
+    }
+}
+
+//Problem B
 
 typedef struct 
 {
-	const char *code;
-	const char *destination;
-	int departure; 
+    const char *code;
+    const char *destination;
+    int departure; 
 } Flight;
+
+typedef struct 
+{
+    char *destination;
+    int count;
+} Destinations_count;
 
 typedef int(*Flight_cmp)(Flight, Flight);
 
+typedef int(*Destinations_count_cmp)(Destinations_count, Destinations_count);
 
 Flight flight(const char *code, const char *destination, int departure)
 {
-	Flight result;
-	result.code = code;
-	result.destination = destination;
-	result.departure = departure;
-	return result;
+    Flight result;
+    result.code = code;
+    result.destination = destination;
+    result.departure = departure;
+    return result;
 }
 
-void flights_exchange(Flight *a, int x, int y)
+char *str_dup(const char *s)            //duplica uma cadeia
 {
-	Flight m = a[x];
-	a[x] = a[y];
-	a[y] = m;
-}
-
-char *str_dup(const char *s)			
-{
-	char *result = (char *) malloc(strlen(s) + 1);
-	strcpy(result, s);
-	return result;
-}
-
-void flights_isort_gen(Flight *a, int n, Flight_cmp cmp)
-{
-	for (int i = 1; i < n; i++)
-	{
-		int j = i;
-		while (j > 0 && cmp(a[j-1], a[j]) > 0)
-		{
-			flights_exchange(a, j-1, j);
-			j--;
-		}
-	}
-}
-
-void flights_write(FILE *f, Flight *a, int n)
-{
-	for (int i = 0; i < n; i++)
-		fprintf(f, "[%d][%s][%s]\n", a[i].departure, a[i].code, a[i].destination);
-}
-
-int flight_cmp_by_destination_departure(Flight x, Flight y)
-{
-	int result = strcmp(x.destination, y.destination);
-	if (result == 0)
-		result = -(x.departure - y.departure);
-	return result;
+    char *result = (char *) malloc(strlen(s) + 1);
+    strcpy(result, s);
+    return result;
 }
 
 int flights_read(FILE *f, Flight *a)
@@ -72,23 +197,110 @@ int flights_read(FILE *f, Flight *a)
   char destination[64];
   int departure;
   while (fscanf(f, "%d%s%s", &departure, code, destination) != EOF)
-  a[result++] =
-  flight(str_dup(code), str_dup(destination), departure);
+    a[result++] = flight(str_dup(code), str_dup(destination), departure);
   return result;
+}
+
+int flight_cmp_by_destination_departure(Flight x, Flight y)
+{
+    int result = strcmp(x.destination, y.destination);
+    if (result == 0)
+        result = -(x.departure - y.departure);
+    return result;
+}
+
+void flights_exchange(Flight *a, int x, int y)
+{
+    Flight m = a[x];
+    a[x] = a[y];
+    a[y] = m;
+}
+
+void flights_isort_gen(Flight *a, int n, Flight_cmp cmp)
+{
+    for (int i = 1; i < n; i++)
+    {
+        int j = i;
+        while (j > 0 && cmp(a[j-1], a[j]) > 0)
+        {
+            flights_exchange(a, j-1, j);
+            j--;
+        }
+    }
+}
+
+int flight_cmp_by_destination(Flight x, Flight y)
+{
+    int result = strcmp(x.destination, y.destination);
+    if (result == 0)
+        result = strcmp(x.code, y.code);
+    return result;
+}
+
+void flights_write(FILE *f, Flight *a, int n)
+{
+    for (int i = 0; i < n; i++)
+        fprintf(f, "[%d][%s][%s]\n", a[i].departure, a[i].code, a[i].destination);
+}
+
+//Problem C
+
+/*int groups_count_while(Flight *a, int n, char *x)
+{
+    int result = 0;
+    while (result < n && a[result] == x)
+        result++;
+    return result;
+}
+
+int doubles_groups(Flight *a, int n, char *b)
+{
+    int result = 0;
+    int i = 0;
+    while (i < n)
+    {
+        int z = groups_count_while(a+i, n-i, a[i]);
+        b[result++] = z;
+        i += z;
+    }
+    return result;
+}*/
+
+ 
+//-------------------------------Funcoes-de-teste------------------------ 
+void test_problem_A(void)
+{
+     
+    Point a[100];
+    int n = points_read(stdin, a);
+    int n_Pair = n*(n-1)/2;
+    points_isort_by_x_y(a, n);
+    TwoPoints pair[n_Pair];
+    pair_constructor(a, n, pair);
+    TwoPoints_i_sort(pair, n_Pair);
+    pair_println(pair, n_Pair);
 }
 
 void test_problem_B(char *filename)
 {
-	FILE *f = fopen(filename, "r");
-	assert(f != NULL);
-	Flight flights[MAX_FLIGHTS];
-	int n_flights = flights_read(f, flights);
-	flights_isort_gen(flights, n_flights, flight_cmp_by_destination_departure);
-	flights_write(stdout, flights, n_flights);
+    FILE *f = fopen(filename, "r");
+    assert(f != NULL);
+    Flight flights[MAX_FLIGHTS];
+    int n_flights = flights_read(f, flights);
+    flights_isort_gen(flights, n_flights, flight_cmp_by_destination_departure);
+    flights_write(stdout, flights, n_flights);
 }
+
+void test_problem_C(char *filename)
+{
+
+}
+
 
 int main(int argc, char **argv)
 {
-	test_problem_B(argv[1]);
-	return 0;
+    test_problem_A();
+    //test_problem_B(argv[1]);
+    //test_problem_C(argv[1]);
+    return 0;
 }
