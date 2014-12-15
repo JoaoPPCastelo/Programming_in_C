@@ -1,4 +1,4 @@
-Enter file contents here// --------------------
+// --------------------
 
 // Festa da Programacao
 // 12 de Dezembro
@@ -189,7 +189,23 @@ double max(double x, double y)
 	return x>=y ? x : y;
 }
 
-double min(double x, double y)
+int min(int x, int y)
+{
+	return x<=y ? x : y;
+}
+
+int ints_min(const int *a, int n)
+{
+	int result = INT_MAX;
+	for (int i = 0; i < n; ++i)
+	{
+		if (result >= a[i])
+			result = a[i];
+	}
+	return result;	
+}
+
+double mind(double x, double y)
 {
 	return x<=y ? x : y;
 }
@@ -197,6 +213,17 @@ double min(double x, double y)
 double exam(double lab, int goal)
 {
 	return max(exam_one_decimal(lab, goal), 8.5);
+}
+
+double doubles_min(const double *a, int n)
+{
+	double result = INT_MAX;
+	for (int i = 0; i < n; i++)
+	{
+		if (result > a[i] && a[i] > 0)
+			result = a[i];
+	}
+	return result;
 }
 
 //roaming
@@ -482,7 +509,7 @@ void doubles_println_basic(const double *a, int n)
 
 //Contagem de elementos do array
 
-int doubles_count(const double *a, int n, int x)
+int ints_count(int *a, int n, int x)
 {
 	int result = 0;
 	for (int i = 0; i < n; i++)
@@ -493,14 +520,23 @@ int doubles_count(const double *a, int n, int x)
 
 //Problema prático - dias de chuva7
 
-void task_rainy_days(void)
+/*void task_rainy_days(void)
 {
 	double p[50000];
 	int n = doubles_get(p);
 	printf("%d\n", n - doubles_count(p, n, 0.0));
-}
+}*/
 
 //Soma do array
+
+int doubles_count(const double *a, int n, int x) 
+{ 
+ 	int result = 0; 
+ 	for (int i = 0; i < n; i++) 
+ 		if (a[i] == x) 
+ 			result++; 
+ 	return result; 
+} 
 
 int ints_sum(const int *a, int n)
 {
@@ -656,7 +692,15 @@ int ints_find_equal_arrays(const int *a, const int n, const int *b, int m)
 	return result;
 }
 
-int doubles_count_while(const double*a, int n, double x)
+/*int doubles_count_while(const double*a, int n, double x)
+{
+	int result = 0;
+	while (result < n && a[result] == x)
+		result++;
+	return result;
+}*/
+
+int int_count_while(const int*a, int n, double x)
 {
 	int result = 0;
 	while (result < n && a[result] == x)
@@ -664,7 +708,7 @@ int doubles_count_while(const double*a, int n, double x)
 	return result;
 }
 
-int doubles_unique(const double *a, int n, double *b)
+/*int doubles_unique(const double *a, int n, double *b)
 {
 	int result = 0;
 	int i = 0;
@@ -675,9 +719,9 @@ int doubles_unique(const double *a, int n, double *b)
 		i += z;
 	}
 	return result;
-}
+}*/
 
-int doubles_unique_r(const double *a, int n, double *b)
+/*int doubles_unique_r(const double *a, int n, double *b)
 {
 	int result = 0;
 	if (n > 0)
@@ -687,7 +731,7 @@ int doubles_unique_r(const double *a, int n, double *b)
 		result = 1 + doubles_unique_r(a+z, n-z, b+1);
 	}
 	return result;
-}
+}*/
 
 int ints_rank_general(const int *a, int n, int x)		//nº de elementos do array om valor menor a x
 {
@@ -1006,10 +1050,16 @@ int y;
 
 //Euclidean distance
 
+/*double distance(Point p, Point q)
+{
+	return ((p.x-q.x)*(p.x-q.x) + (p.y-q.y)*(p.y-q.y));
+}*/
+
 double distance(Point p, Point q)
 {
-	return sqrt((p.x-q.x)*(p.x-q.x) + (p.y-q.y)*(p.y-q.y));
+	return ((p.x-q.x)*(p.x-q.x) + (p.y-q.y)*(p.y-q.y));
 }
+
 
 //q.y - p.y r.y - q.y
 //--------- == ---------
@@ -1056,6 +1106,18 @@ int flights_read(FILE *f, Flight *a)
 		a[result++] = flight(str_dup(code), str_dup(destination), departure);
 	return result;
 }
+
+int poin_read(FILE *f, Flight *a)
+{
+	int result = 0;
+	char code[16];
+	char destination[64];
+	int departure;
+	while (fscanf(f, "%d%s%s", &departure, code, destination) != EOF)
+		a[result++] = flight(str_dup(code), str_dup(destination), departure);
+	return result;
+}
+
 
 //Escrever para array
 
@@ -1124,7 +1186,7 @@ void points_fprintf(FILE *f, Point *a, int n, const char *fmt)
 void points_fprintfln(FILE *f, Point *a, int n, const char *fmt)
 {
 	points_fprintf(f, a, n, fmt);
-	fprintf(f, "\n");
+	//fprintf(f, "\n");
 }
 
 //comparação por x e depois por y
@@ -1325,10 +1387,38 @@ int strings_unique(char **a, int n, char **b, int x)
     return result; 
 }
 
+int all_distances(Point *a, int n, int k, double *b)
+{
+	int result = 0;
+	for (int i = 0; i < n; i++)
+	{
+		if ( k != i)
+			b[result++] = distance(a[k], a[i]);
+	}
+	return result;
+}
 
+int is_reliable(Point *a, int n, int k)
+{
+	double b[10000];
+	all_distances(a, n, k, b);
+	int min = doubles_min(b, n);
+	if (doubles_count(b, n, min) >= 2)
+		return 0;
+	else 
+		return 1;
+}
 
-
-
+int all_reliable(Point *a, int n, Point *c)
+{
+	int result = 0;
+	for (int i = 0; i < n; i++)
+	{
+		if (is_reliable(a, n, i) == 0)
+			c[result++] = a[i];
+	}
+	return result;
+}
 
 
 
@@ -1727,23 +1817,23 @@ void test_ints_equal_arrays(void)
 	printf("%d\n", ints_find_equal_arrays(a, n, b, m));
 }
 
-void test_doubles_count_while(void)
+/*void test_doubles_count_while(void)
 {
 	double a[1000];
 	int x;
 	int n = doubles_get(a);
 	scanf("%d", &x);
 	printf("%d\n", doubles_count_while(a, n, x));
-}
+}*/
 
-void test_doubles_unique(void)
+/*void test_doubles_unique(void)
 {
 	double a[1000];
 	double b[1000];
 	int n = doubles_get(a);
 	int m = doubles_unique(a, n, b);
 	doubles_println_basic(b, m);
-}
+}*/
 
 void test_ints_insert(void)
 {
@@ -2010,187 +2100,25 @@ void test_problem_A(char *filename)
 	}
 }
 
+//Festa_problema_B
+
+void test_problem_B(char *filename)
+{
+	Point a[1000];
+	Point c[1000];
+	//FILE *f = fopen(filename, "r");
+	//assert(f != NULL);
+	int n_points = points_read(stdin, a);
+	int w = all_reliable(a, n_points, c);
+	printf("%d\n", w);
+	points_isort_by_x_y(c, w);
+	points_fprintfln(stdout, c, w, "%d %d\n");
+	}
 
 
 
 /*----------------End-of-test-functions----------------*/
 
-/*----------------Unit-Tests----------------*/
-
-void unit_test_doubles_count(void)
-{
-	double a1[16] = {6,7,1,8,9,3,3,5,6,7,3,9,6,1,1,1};
-	assert(doubles_count(a1, 16, 1) == 4);
-	assert(doubles_count(a1, 16, 9) == 2);
-	assert(doubles_count(a1, 16, 2) == 0);
-	assert(doubles_count(a1, 8, 1) == 1);
-	assert(doubles_count(a1, 8, 2) == 0);
-	assert(doubles_count(a1, 0, 6) == 0);
-}
-
-void unit_test_doubles_sum(void)
-{
-	double a1[8] = {6,7,1,8,9,3,3,5};
-	assert(doubles_sum(a1, 8) == 42);
-	assert(doubles_sum(a1, 4) == 22);
-	assert(doubles_sum(a1, 2) == 13);
-	assert(doubles_sum(a1, 1) == 6);
-	assert(doubles_sum(a1, 0) == 0);
-	double a2[10] = {1,5,9,13,17,21,25,29,33,37};
-	assert(doubles_sum(a2, 10) == 190);
-	assert(doubles_sum(a2, 5) == 45);
-	double a3[8] = {4,9,4,4,5,2,7,5};
-	assert(doubles_sum(a3, 8) == 40);
-	assert(doubles_sum(a3, 5) == 26);
-	assert(doubles_sum(a3+3, 5) == 23);
-	assert(doubles_sum(a3+2, 4) == 15);
-}
-
-void unit_test_doubles_max(void)
-{
-	double a1[16] = {6,7,3,8,9,3,3,5,6,7,3,9,6,1,8,3};
-	assert(doubles_max(a1, 16) == 9);
-	assert(doubles_max(a1, 4) == 8);
-	assert(doubles_max(a1, 1) == 6);
-	double a2[10] = {32,67,81,23,27,12,90,13,75,13};
-	assert(doubles_max(a2, 10) == 90);
-	assert(doubles_max(a2, 6) == 81);
-	assert(isinf(doubles_max(a2, 0)));						//isinf??
-	double a3[5] = {7e15,3e18,2e14,4e22,3e13};
-	assert(doubles_max(a3, 5) == 4e22);
-	//double a4[5] = {7e-153,3e-185,2e-140,9e-225,3e-213};	//testes unitarios errados
-	//assert(doubles_max(a4, 5) == 2e-140);
-	//double a5[5] = {-7e200,-3e185,-2e240,-7e225,-3e280};
-	//assert(doubles_max(a5, 5) == -3e185);
-	double a6[8] = {4,9,4,4,5,2,7,5};
-	assert(doubles_max(a6, 8) == 9);
-	assert(doubles_max(a6, 5) == 9);
-	assert(doubles_max(a6+3, 5) == 7);
-	assert(doubles_max(a6+2, 4) == 5);
-}
-
-void unit_test_ints_find(void)
-{
-	int a[8] = {6,2,9,1,4,2,7,5};
-	assert(ints_find(a, 8, 9) == 2);
-	assert(ints_find(a, 8, 5) == 7);
-	assert(ints_find(a, 8, 6) == 0);
-	assert(ints_find(a, 8, 3) == -1);
-	assert(ints_find(a, 4, 9) == 2);
-	assert(ints_find(a, 4, 5) == -1);
-	assert(ints_find(a, 4, 6) == 0);
-	assert(ints_find(a, 8, 3) == -1);
-	assert(ints_find(a, 1, 9) == -1);
-	assert(ints_find(a, 1, 6) == 0);
-	assert(ints_find(a, 0, 6) == -1);
-	assert(ints_find(a, 0, 4) == -1);
-}
-
-void unit_test_ints_nub(void)
-{
-	int a1[12] = {6,2,6,9,4,2,9,9,9,2,1,2};
-	int b1[12];
-	int m1 = ints_nub(a1, 12, b1);
-	int z1[5] = {6,2,9,4,1};
-	assert(ints_find_equal_arrays(b1, m1, z1, 5));
-
-	int a2[6] = {1,2,3,3,2,1};
-	int b2[6];
-	int m2 = ints_nub(a2, 6, b2);
-	int z2[3] = {1,2,3};
-	assert(ints_find_equal_arrays(b2, m2, z2, 3));
-
-	int a3[5] = {8,8,8,8,8};
-	int b3[5];
-	int m3 = ints_nub(a3, 5, b3);
-	assert(m3 == 1 && b3[0] == 8);
-}
-
-void unit_test_strcmp(void)
-{
-	assert(strcmp("lisboa", "faro") > 0);
-	assert(strcmp("quarteira", "queluz") < 0);
-	assert(strcmp("tavira", "Tavira") != 0);
-	assert(strcmp("lagos", "LAGOS") != 0);
-	assert(strcmp("silves", "silves") == 0);
-	assert(strcmp("braga", "braganca") < 0);
-	assert(strcmp("vila real de santo antonio", "vila real") > 0);
-	assert(strcmp("", "sagres") < 0);
-	assert(strcmp("alcoutim", "") > 0);
-	assert(strcmp("", "") == 0);
-}
-
-
-
-void unit_test_distance(void)
-{
-	Point p1 = point(2,4);
-	Point p2 = point(5,8);
-	assert(distance(p1, p2) == 5);
-	Point p3 = point(0,0);
-	Point p4 = point(1,1);
-	assert(distance(p3, p4) == sqrt(2));
-	assert(distance(p1, p3) == sqrt(20));
-	assert(distance(p1, p1) == 0);
-	assert(distance(p2, p4) == sqrt(65));
-}
-
-void unit_test_collinear(void)
-{
-	Point p1 = point(2,4);
-	Point p2 = point(5,8);
-	Point p3 = point(8,12);
-	assert(collinear(p1, p2, p3));
-	Point p4 = point(0,0);
-	Point p5 = point(1,1);
-	Point p6 = point(4,4);
-	assert(collinear(p4, p5, p6));
-	Point p7 = point(1000, 4);
-	assert(collinear(p1, p6, p7));
-	assert(!collinear(p4, p1, p2));
-}
-
-/*void unit_test_angle(void)
-{
-	assert(angle(point(1, 0)) == 0);
-	assert(angle(point(1, 1)) == M_PI_4);
-	assert(angle(point(0, 1)) == M_PI_2);
-	assert(angle(point(-1, 1)) == M_PI_2 + M_PI_4);
-	assert(angle(point(-1, 0)) == M_PI);
-	assert(angle(point(-1, -1)) == M_PI + M_PI_4);
-	assert(angle(point(0, -1)) == M_PI + M_PI_2);
-	assert(angle(point(1, -1)) == M_PI + M_PI_2 + M_PI_4);
-}*/
-
-void unit_test_magnitude(void)
-{
-	assert(magnitude(point(0, 0)) == 0.0);
-	assert(magnitude(point(0, 2)) == 2.0);
-	assert(magnitude(point(-7, 0)) == 7.0);
-	assert(magnitude(point(1, 1)) == sqrt(2.0));
-	assert(magnitude(point(3, 4)) == 5);
-	assert(magnitude(point(12, 5)) == 13);
-	assert(magnitude(point(12, -5)) == 13);
-	assert(magnitude(point(-12, 5)) == 13);
-	assert(magnitude(point(-12, -5)) == 13);
-}
-
-void unit_tests(void)
-{
-	unit_test_doubles_count();
-	unit_test_doubles_sum();
-	unit_test_doubles_max();
-	unit_test_ints_find();
-	unit_test_ints_nub();
-	unit_test_strcmp();
-	unit_test_distance();
-	unit_test_collinear();
-	//unit_test_angle();
-	//unit_test_magnitude();
-}
-
-
-/*----------------End-of-Unit-Tests----------------*/
 
 /*int main (void)
 {
@@ -2202,6 +2130,7 @@ void unit_tests(void)
 
 int main(int argc, char **argv)
 {
-	test_problem_A(argv[1]);
+	//test_problem_A(argv[1]);
+	test_problem_B(argv[1]);
 	return 0;
 }
